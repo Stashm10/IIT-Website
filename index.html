@@ -13,38 +13,139 @@
       color: #1a1a1a;
       font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
+      padding-top: 105px; /* Added spacing so content doesn't hide behind the sticky banner */
     }
 
-    /* ── Header ── */
-    header {
-      background: #fff;
+    /* ── NEW ADAPTIVE HEADER BANNER ── */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #ffffff;
+      transition: all 0.3s ease-in-out;
       border-bottom: 3px solid #CC0000;
-      padding: 1.25rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem;
+    }
+
+    /* Top Utility Bar */
+    .header-top {
+      background-color: #757575;
+      padding: 6px 0;
+      font-size: 11px;
+      transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
+      max-height: 40px;
+      opacity: 1;
+      overflow: hidden;
+      width: 100%;
+    }
+    .utility-links {
+      margin-left: auto;
+    }
+    .utility-links a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+    .utility-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Navigation Row */
+    .header-main {
+      background-color: #CC0000; /* Red at the top of the page */
+      padding: 0.75rem 0;
+      transition: background-color 0.3s ease, padding 0.3s ease;
+      width: 100%;
+    }
+    .logo-link {
+      text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 10px;
     }
     .iit-badge {
-      background: #CC0000;
-      color: #fff;
+      background: #fff;
+      color: #CC0000;
       font-weight: 900;
       font-size: 1.1rem;
       padding: 0.25rem 0.6rem;
       border-radius: 3px;
       letter-spacing: 0.05em;
       flex-shrink: 0;
+      transition: all 0.3s ease;
     }
     .header-text h1 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #ffffff;
       line-height: 1.2;
+      transition: color 0.3s ease;
     }
-    .header-text .subtitle {
-      font-size: 0.8rem;
-      color: #555;
-      margin-top: 2px;
-      letter-spacing: 0.02em;
+
+    .main-nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 20px;
+      font-size: 0.9rem;
+    }
+    .main-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .scroll-ctas {
+      display: none; /* Hidden until scrolled */
+    }
+    .cta-btn {
+      text-decoration: none;
+      padding: 6px 14px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      border-radius: 3px;
+    }
+    .btn-red {
+      background-color: #CC0000;
+      color: #ffffff;
+    }
+    .btn-red:hover {
+      background-color: #b30000;
+    }
+
+    /* SCROLLED BANNER STATE TRIGGER */
+    .site-header.scrolled .header-top {
+      max-height: 0;
+      padding: 0;
+      opacity: 0;
+    }
+    .site-header.scrolled .header-main {
+      background-color: #ffffff; /* Turns white on scroll */
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 0.5rem 0;
+    }
+    .site-header.scrolled .iit-badge {
+      background: #CC0000;
+      color: #ffffff;
+    }
+    .site-header.scrolled .header-text h1 {
+      color: #1a1a1a; /* Title turns dark */
+    }
+    .site-header.scrolled .main-nav {
+      display: none; /* Hides original navigation links */
+    }
+    .site-header.scrolled .scroll-ctas {
+      display: flex;
+      gap: 8px;
     }
 
     /* ── Main layout ── */
@@ -270,7 +371,7 @@
       background: rgba(255,255,255,0.9);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      z-index: 100; gap: 1rem;
+      z-index: 1100; gap: 1rem;
       transition: opacity 0.3s;
     }
     #loading-overlay.hidden { opacity: 0; pointer-events: none; }
@@ -291,9 +392,9 @@
       margin-top: 0.75rem;
     }
 
-    @media (max-width: 640px) {
-      header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-      .card { padding: 1rem; }
+    @media (max-width: 768px) {
+      .main-nav { display: none; }
+      body { padding-top: 80px; }
     }
   </style>
 </head>
@@ -304,11 +405,43 @@
   <p>Loading spectrum data…</p>
 </div>
 
-<header>
-  <span class="iit-badge">IIT</span>
-  <div class="header-text">
-    <h1>Spectrum Observatory — 30–54 MHz</h1>
-    <div class="subtitle">Illinois Institute of Technology &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; January 1, 2018</div>
+<header class="site-header" id="siteHeader">
+  <div class="header-top">
+    <div class="nav-container">
+      <div class="utility-links">
+        <a href="https://directory.iit.edu" target="_blank">Directory</a>
+        <a href="https://www.iit.edu/news" target="_blank">News</a>
+        <a href="https://alumni.iit.edu" target="_blank">Alumni</a>
+        <a href="https://www.iit.edu/events" target="_blank">Events</a>
+        <a href="https://www.iit.edu/giving" target="_blank">Giving</a>
+        <a href="https://www.iit.edu/mumbai" target="_blank">Illinois Tech Mumbai</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-main">
+    <div class="nav-container">
+      <a href="https://www.iit.edu" class="logo-link" title="Go to iit.edu Home">
+        <span class="iit-badge">IIT</span>
+        <div class="header-text">
+          <h1>Spectrum Observatory</h1>
+        </div>
+      </a>
+      
+      <nav class="main-nav">
+        <a href="https://www.iit.edu/academics" target="_blank">Academics</a>
+        <a href="https://www.iit.edu/admissions-aid" target="_blank">Admission and Aid</a>
+        <a href="https://www.iit.edu/student-experience" target="_blank">Student Experience</a>
+        <a href="https://www.iit.edu/research" target="_blank">Research</a>
+        <a href="https://www.iit.edu/about" target="_blank">About</a>
+      </nav>
+
+      <div class="scroll-ctas">
+        <a href="https://www.iit.edu/admissions-aid/request-information" target="_blank" class="cta-btn btn-red">Request Info</a>
+        <a href="https://www.iit.edu/admissions-aid/visit-and-tour" target="_blank" class="cta-btn btn-red">Visit</a>
+        <a href="https://www.iit.edu/admissions-aid/apply" target="_blank" class="cta-btn btn-red">Apply</a>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -320,7 +453,6 @@
     segment below to explore its power distribution, spectrogram, and data matrix.
   </p>
 
-  <!-- Allocation chart -->
   <div>
     <div class="section-title">Frequency Allocation — 30 to 54 MHz (NTIA)</div>
     <section class="chart-shell" aria-label="30 to 54 MHz frequency allocation chart">
@@ -477,7 +609,6 @@
     </section>
   </div>
 
-  <!-- Histogram -->
   <div class="card">
     <div class="section-title">Power Distribution — Full Band (30–54 MHz)</div>
     <div id="histogram"></div>
@@ -487,96 +618,10 @@
     </p>
   </div>
 
-  <!-- Heatmap -->
   <div class="card">
     <div class="section-title">Spectrogram — Power vs. Time and Frequency</div>
     <div id="heatmap"></div>
   </div>
 
-  <!-- Stats -->
   <div class="card">
-    <div class="section-title">Summary Statistics — Full Band</div>
-    <div class="stats-grid" id="stats-grid"></div>
-  </div>
-
-</main>
-
-<script>
-const LAYOUT_BASE = {
-  paper_bgcolor: "#fff",
-  plot_bgcolor:  "#fff",
-  font: { color: "#1a1a1a", family: "Arial, Helvetica, sans-serif", size: 11 },
-  margin: { t: 20, r: 20, b: 50, l: 65 },
-  xaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-  yaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-};
-const CONFIG = { responsive: true, displayModeBar: false };
-
-async function loadHistogram() {
-  const res = await fetch("/api/histogram");
-  const d = await res.json();
-  const edges = d.edges;
-  const x = edges.slice(0, -1).map((e, i) => (e + edges[i+1]) / 2);
-  Plotly.react("histogram", [{
-    x, y: d.counts, type: "bar",
-    marker: { color: "#CC0000" },
-    hovertemplate: "%{x:.1f} dBm — %{y:,}<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Power (dBm)" } },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Count" } },
-    bargap: 0,
-  }, CONFIG);
-}
-
-async function loadHeatmap() {
-  const res = await fetch("/api/data");
-  const d = await res.json();
-  Plotly.react("heatmap", [{
-    z: d.powers, x: d.freqs, y: d.timestamps,
-    type: "heatmap",
-    colorscale: "Viridis",
-    colorbar: { title: { text: "dBm", side: "right" }, tickfont: { color: "#333" } },
-    hovertemplate: "Freq: %{x:.2f} MHz<br>Time: %{y}<br>Power: %{z:.1f} dBm<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    margin: { t: 20, r: 80, b: 50, l: 80 },
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Frequency (MHz)" }, range: [30, 54] },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Time (Chicago)" }, autorange: "reversed" },
-  }, CONFIG);
-}
-
-async function loadStats() {
-  const res = await fetch("/api/stats");
-  const d = await res.json();
-  const items = [
-    { label: "Frequency Range", value: "30–54", unit: "MHz" },
-    { label: "Sweeps", value: d.num_sweeps },
-    { label: "Min Power", value: d.min_power.toFixed(1), unit: "dBm" },
-    { label: "Max Power", value: d.max_power.toFixed(1), unit: "dBm" },
-    { label: "Mean Power", value: d.mean_power.toFixed(1), unit: "dBm" },
-    { label: "Noise Floor (p10)", value: d.noise_floor.toFixed(1), unit: "dBm" },
-    { label: "Spectral Occupancy", value: d.occupancy_pct.toFixed(1), unit: "%",
-      note: "% of readings exceeding noise floor by >6 dB" },
-  ];
-  document.getElementById("stats-grid").innerHTML = items.map(it => `
-    <div class="stat-item">
-      <div class="stat-label">${it.label}</div>
-      <div class="stat-value">${it.value}${it.unit ? `<span class="stat-unit">${it.unit}</span>` : ""}</div>
-      ${it.note ? `<div class="stat-note">${it.note}</div>` : ""}
-    </div>`).join("");
-}
-
-async function boot() {
-  try {
-    await Promise.all([loadHistogram(), loadHeatmap(), loadStats()]);
-  } finally {
-    const o = document.getElementById("loading-overlay");
-    o.classList.add("hidden");
-    setTimeout(() => o.remove(), 400);
-  }
-}
-boot();
-</script>
-</body>
-</html>
+    <div class="section-title">Summary Statistics — Full
