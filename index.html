@@ -22,10 +22,10 @@
        the allocation chart.
        ════════════════════════════════════════════════════════ */
     .site-header{
-      --red: #cc0000;
+      --red: #e31837; /* Updated to Official IIT Red */
       --red-dark: #a30000;
       --hdr-ink: #222;
-      --hdr-bg: #f4f4f4;
+      --hdr-bg: #ffffff; /* FIXED: Removed gray background, changed to clean white */
       --h-top: 40px;
       --h-logo: 96px;
       --h-nav: 52px;
@@ -69,12 +69,18 @@
     }
     .site-header.is-scrolled .logo-row{ height:64px; }
 
-    /* logo: two full-color SVG marks swapped on scroll — red at top,
-       black once the header is in its condensed/scrolled state */
+    /* logo adjustments for official typography styling */
     .site-header .logo{
       display:block; height:48px; transition: height .25s ease;
     }
-    .site-header .logo svg{ height:100%; width:auto; display:block; }
+    .site-header .logo svg{ 
+      height:100%; 
+      width:auto; 
+      display:block; 
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
     .site-header.is-scrolled .logo{ height:32px; }
 
     .site-header .logo--red{ display:block; }
@@ -131,12 +137,28 @@
       height: var(--h-nav);
       overflow:hidden;
       transition: height .25s ease, opacity .2s ease;
+      position: relative;
     }
     .site-header.is-scrolled .main-nav{ height:0; opacity:0; }
+    
+    /* FIXED: Flex layouts update to cleanly center links while isolating the search bar toggle rightward */
     .site-header .main-nav ul{
-      list-style:none; display:flex; gap:4px; height:100%; align-items:center;
+      list-style:none; 
+      display:flex; 
+      height:100%; 
+      align-items:center;
       padding:0 24px;
+      width: 100%;
     }
+    
+    .nav-links-wrapper {
+      display: flex;
+      gap: 4px;
+      margin: 0 auto; /* Pure centering alignment logic */
+      height: 100%;
+      align-items: center;
+    }
+
     .site-header .main-nav li{ position:relative; height:100%; display:flex; align-items:center; }
 
     .site-header .nav-link, .site-header .nav-trigger{
@@ -162,7 +184,7 @@
     .site-header .dropdown-panel a{
       display:block; padding:8px 18px; color:#222; text-decoration:none; font-size:.9rem;
     }
-    .site-header .dropdown-panel a:hover{ background: var(--hdr-bg); color: var(--red); }
+    .site-header .dropdown-panel a:hover{ background: #f4f4f4; color: var(--red); }
 
     .site-header .mobile-menu{
       display:none; position:absolute; top:100%; right:0; background:#fff;
@@ -170,25 +192,24 @@
     }
     .site-header .mobile-menu.open{ display:block; }
     .site-header .mobile-menu a{ display:block; padding:10px 18px; color:#222; text-decoration:none; font-size:.92rem; }
-    .site-header .mobile-menu a:hover{ background:var(--hdr-bg); color:var(--red); }
+    .site-header .mobile-menu a:hover{ background:#f4f4f4; color:var(--red); }
 
     @media (prefers-reduced-motion: reduce){
       .site-header, .site-header .utility-bar, .site-header .logo-row,
       .site-header .logo, .site-header .main-nav{ transition:none !important; }
     }
 
-    /* ── Page banner (was the bare <header>, renamed so it no longer
-       collides with the new institutional <header class="site-header">) ── */
+    /* ── Page banner ── */
     .page-banner {
       background: #fff;
-      border-bottom: 3px solid #CC0000;
+      border-bottom: 3px solid #e31837;
       padding: 1.25rem 2rem;
       display: flex;
       align-items: center;
       gap: 1.25rem;
     }
     .iit-badge {
-      background: #CC0000;
+      background: #e31837;
       color: #fff;
       font-weight: 900;
       font-size: 1.1rem;
@@ -307,10 +328,7 @@
     }
 
     .column:last-child { border-right: 0; }
-
-    .column:hover {
-      filter: brightness(1.07) saturate(1.08);
-    }
+    .column:hover { filter: brightness(1.07) saturate(1.08); }
 
     .column:focus-visible {
       outline: 4px solid #000;
@@ -369,94 +387,8 @@
       transform: translate(-50%, -50%) rotate(-90deg);
     }
 
-    .below {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: start;
-      gap: 20px;
-      min-width: 1180px;
-      padding-top: 16px;
-      font-family: Georgia, "Times New Roman", serif;
-    }
-
-    .mhz {
-      font-size: 44px;
-      line-height: 1;
-    }
-
-    .ism {
-      align-self: center;
-      font-size: 23px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      white-space: nowrap;
-    }
-
-    /* ── Card ── */
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 1.25rem 1.5rem;
-    }
-
-    /* ── Stats grid ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.75rem;
-    }
-    .stat-item {
-      background: #f8f8f8;
-      border: 1px solid #e0e0e0;
-      border-radius: 3px;
-      padding: 0.75rem 1rem;
-    }
-    .stat-label {
-      font-size: 0.65rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 0.25rem;
-    }
-    .stat-value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-    .stat-unit { font-size: 0.7rem; color: #666; margin-left: 2px; }
-    .stat-note { font-size: 0.65rem; color: #777; margin-top: 0.25rem; line-height: 1.4; }
-
-    /* ── Loading ── */
-    #loading-overlay {
-      position: fixed; inset: 0;
-      background: rgba(255,255,255,0.9);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 200; gap: 1rem;
-      transition: opacity 0.3s;
-    }
-    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid #ddd;
-      border-top-color: #CC0000;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loading-overlay p { font-size: 0.85rem; color: #666; }
-
-    .caption {
-      font-size: 0.75rem;
-      color: #666;
-      line-height: 1.5;
-      margin-top: 0.75rem;
-    }
-
     @media (max-width: 640px) {
       .page-banner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-      .card { padding: 1rem; }
     }
   </style>
 </head>
@@ -467,12 +399,8 @@
   <p>Loading spectrum data…</p>
 </div>
 
-<!-- ════════════════════════════════════════════════════════
-     SITE-WIDE STICKY HEADER (institutional nav)
-     ════════════════════════════════════════════════════════ -->
 <header class="site-header" id="siteHeader">
 
-  <!-- row 1: utility links — each opens in a NEW TAB -->
   <div class="utility-bar">
     <ul>
       <li><a href="https://www.iit.edu/directory" target="_blank" rel="noopener">Directory</a></li>
@@ -485,11 +413,10 @@
     </ul>
   </div>
 
-  <!-- row 2: logo (click -> home page) + scrolled-state CTAs -->
   <div class="logo-row">
     <a class="logo logo--red" href="https://www.iit.edu/" aria-label="Illinois Tech home page">
       <svg viewBox="0 0 682.217 84.606" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-        <path d="m682.217.701h-16.243v34.006h-28.164V.701h-16.243v83.204h16.243v-34.707h28.164v34.707h16.243V.701Zm-84.138,57.612c-1.948,7.869-6.623,11.802-14.0229,11.802-8.493,0-13.2451-5.218-14.257-15.659-.157-1.636-.234-3.193-.234-4.674v-7.479c0-11.92,1.052-19.358,3.155-22.32,2.648-3.661,6.428-5.493,11.3361-5.493,7.4789,0,12.153,3.935,14.0229,11.803h16.4771c-1.402-8.257-4.773-14.704-10.108-19.34-5.337-4.634-12.174-6.953-20.509-6.953-8.8051,0-16.284,3.038-22.437,9.115-3.74,3.663-6.155,8.454-7.245,14.374-.625,3.35-.935,9.622-.935,18.814,0,9.349.31,15.621.935,18.814,1.168,5.922,3.582,10.713,7.245,14.374,6.077,6.077,13.556,9.115,22.437,9.115,8.257,0,15.093-2.337,20.509-7.012,5.414-4.674,8.782-11.101,10.108-19.281h-16.4771Zm-50.833,11.101h-38.564v-20.216h32.838v-14.491h-32.838V15.192h38.564V.701h-54.807v83.204h54.807v-14.491ZM486.245.701h-59.715v14.491h21.736v68.713h16.243V15.192h21.736V.701Zm-104.119,34.59l-9.816-1.402c-6.857-.935-10.284-4.011-10.284-9.232,0-3.506,1.327-6.193,3.984-8.063,2.266-1.636,5.235-2.454,8.907-2.454,7.344,0,13.048,1.91,17.113,5.726l10.312-10.167c-6.701-6.465-15.659-9.699-26.877-9.699-8.259,0-15.037,2.103-20.334,6.307-5.766,4.515-8.647,10.822-8.647,18.918,0,13.47,7.362,21.217,22.09,23.24l10.046,1.436c6.621.935,9.933,4.247,9.933,9.933,0,6.854-4.908,10.281-14.724,10.281-8.726,0-15.426-2.337-20.1-7.011l-10.517,10.517c7.322,7.324,17.45,10.985,30.383,10.985,8.569,0,15.659-2.025,21.268-6.077,6.387-4.517,9.583-10.906,9.583-19.165,0-13.944-7.441-21.969-22.32-24.073M338.188.701h-16.243v83.204h16.243V.701Zm-45.225,63.805c-2.804,3.74-6.584,5.609-11.335,5.609-8.492,0-13.245-5.218-14.257-15.659-.233-2.726-.312-6.778-.233-12.153v-12.153c1.256-10.439,6.045-15.66,14.371-15.66,8.641,0,13.432,5.221,14.374,15.66.157,1.714.236,3.739.236,6.076v6.077c0,11.998-1.052,19.399-3.156,22.203m18.347-41.017c-1.168-5.92-3.584-10.711-7.245-14.374-6.077-6.077-13.556-9.115-22.437-9.115s-16.4,3.038-22.554,9.115c-3.739,3.663-6.155,8.454-7.245,14.374-.625,3.35-.935,9.622-.935,18.814,0,9.349.31,15.621.935,18.814,1.169,6,3.582,10.792,7.245,14.374,6.154,6.077,13.673,9.115,22.554,9.115,8.803,0,16.282-3.038,22.437-9.115,3.816-3.74,6.232-8.531,7.245-14.374.701-4.05,1.052-10.322,1.052-18.814,0-9.037-.351-15.309-1.052-18.814M241.312.701h-16.244v50.951L192.114.701h-14.49v83.204h16.243v-51.015l32.996,51.015h14.449V.701Zm-76.075,0h-16.243v83.204h16.243V.701Zm-22.436,68.713h-37.746V.701h-16.243v83.204h53.989v-14.491Zm-60.182,0h-37.746V.701h-16.243v83.204h53.989v-14.491ZM16.243.701H0v83.204h16.243V.701Z" fill="#c00"/>
+        <path d="m682.217.701h-16.243v34.006h-28.164V.701h-16.243v83.204h16.243v-34.707h28.164v34.707h16.243V.701Zm-84.138,57.612c-1.948,7.869-6.623,11.802-14.0229,11.802-8.493,0-13.2451-5.218-14.257-15.659-.157-1.636-.234-3.193-.234-4.674v-7.479c0-11.92,1.052-19.358,3.155-22.32,2.648-3.661,6.428-5.493,11.3361-5.493,7.4789,0,12.153,3.935,14.0229,11.803h16.4771c-1.402-8.257-4.773-14.704-10.108-19.34-5.337-4.634-12.174-6.953-20.509-6.953-8.8051,0-16.284,3.038-22.437,9.115-3.74,3.663-6.155,8.454-7.245,14.374-.625,3.35-.935,9.622-.935,18.814,0,9.349.31,15.621.935,18.814,1.168,5.922,3.582,10.713,7.245,14.374,6.077,6.077,13.556,9.115,22.437,9.115,8.257,0,15.093-2.337,20.509-7.012,5.414-4.674,8.782-11.101,10.108-19.281h-16.4771Zm-50.833,11.101h-38.564v-20.216h32.838v-14.491h-32.838V15.192h38.564V.701h-54.807v83.204h54.807v-14.491ZM486.245.701h-59.715v14.491h21.736v68.713h16.243V15.192h21.736V.701Zm-104.119,34.59l-9.816-1.402c-6.857-.935-10.284-4.011-10.284-9.232,0-3.506,1.327-6.193,3.984-8.063,2.266-1.636,5.235-2.454,8.907-2.454,7.344,0,13.048,1.91,17.113,5.726l10.312-10.167c-6.701-6.465-15.659-9.699-26.877-9.699-8.259,0-15.037,2.103-20.334,6.307-5.766,4.515-8.647,10.822-8.647,18.918,0,13.47,7.362,21.217,22.09,23.24l10.046,1.436c6.621.935,9.933,4.247,9.933,9.933,0,6.854-4.908,10.281-14.724,10.281-8.726,0-15.426-2.337-20.1-7.011l-10.517,10.517c7.322,7.324,17.45,10.985,30.383,10.985,8.569,0,15.659-2.025,21.268-6.077,6.387-4.517,9.583-10.906,9.583-19.165,0-13.944-7.441-21.969-22.32-24.073M338.188.701h-16.243v83.204h16.243V.701Zm-45.225,63.805c-2.804,3.74-6.584,5.609-11.335,5.609-8.492,0-13.245-5.218-14.257-15.659-.233-2.726-.312-6.778-.233-12.153v-12.153c1.256-10.439,6.045-15.66,14.371-15.66,8.641,0,13.432,5.221,14.374,15.66.157,1.714.236,3.739.236,6.076v6.077c0,11.998-1.052,19.399-3.156,22.203m18.347-41.017c-1.168-5.92-3.584-10.711-7.245-14.374-6.077-6.077-13.556-9.115-22.437-9.115s-16.4,3.038-22.554,9.115c-3.739,3.663-6.155,8.454-7.245,14.374-.625,3.35-.935,9.622-.935,18.814,0,9.349.31,15.621.935,18.814,1.169,6,3.582,10.792,7.245,14.374,6.154,6.077,13.673,9.115,22.554,9.115,8.803,0,16.282-3.038,22.437-9.115,3.816-3.74,6.232-8.531,7.245-14.374.701-4.05,1.052-10.322,1.052-18.814,0-9.037-.351-15.309-1.052-18.814M241.312.701h-16.244v50.951L192.114.701h-14.49v83.204h16.243v-51.015l32.996,51.015h14.449V.701Zm-76.075,0h-16.243v83.204h16.243V.701Zm-22.436,68.713h-37.746V.701h-16.243v83.204h53.989v-14.491Zm-60.182,0h-37.746V.701h-16.243v83.204h53.989v-14.491ZM16.243.701H0v83.204h16.243V.701Z" fill="#e31837"/>
       </svg>
       <span class="show-for-sr">Illinois Tech</span>
     </a>
@@ -510,50 +437,52 @@
     </div>
   </div>
 
-  <!-- row 3: red nav bar -->
   <nav class="main-nav" aria-label="Primary">
     <ul>
-      <li>
-        <button class="nav-trigger" aria-expanded="false" aria-controls="panel-academics" data-menu="academics">
-          Academics <span class="sr-only">Open the Academics menu</span>
-        </button>
-        <div class="dropdown-panel" id="panel-academics">
-          <a href="/academics/undergraduate">Undergraduate Programs</a>
-          <a href="/academics/graduate">Graduate Programs</a>
-          <a href="/academics/colleges">Colleges</a>
-        </div>
-      </li>
-      <li>
-        <button class="nav-trigger" aria-expanded="false" aria-controls="panel-admission" data-menu="admission">
-          Admission and Aid <span class="sr-only">Open the Admission and Aid menu</span>
-        </button>
-        <div class="dropdown-panel" id="panel-admission">
-          <a href="/admission-and-aid/undergraduate">Undergraduate Admission</a>
-          <a href="/admission-and-aid/graduate">Graduate Admission</a>
-          <a href="/admission-and-aid/financial-aid">Financial Aid</a>
-        </div>
-      </li>
-      <li>
-        <button class="nav-trigger" aria-expanded="false" aria-controls="panel-student" data-menu="student">
-          Student Experience <span class="sr-only">Open the Student Experience menu</span>
-        </button>
-        <div class="dropdown-panel" id="panel-student">
-          <a href="/student-experience/housing">Housing</a>
-          <a href="/student-experience/clubs">Clubs &amp; Organizations</a>
-          <a href="/student-experience/athletics">Athletics</a>
-        </div>
-      </li>
-      <li>
-        <button class="nav-trigger" aria-expanded="false" aria-controls="panel-research" data-menu="research">
-          Research <span class="sr-only">Open the Research menu</span>
-        </button>
-        <div class="dropdown-panel" id="panel-research">
-          <a href="/research/centers">Research Centers</a>
-          <a href="/research/faculty">Faculty Research</a>
-        </div>
-      </li>
-      <li><a class="nav-link" href="/about">About</a></li>
-      <li>
+      <div class="nav-links-wrapper">
+        <li>
+          <button class="nav-trigger" aria-expanded="false" aria-controls="panel-academics" data-menu="academics">
+            Academics <span class="sr-only">Open the Academics menu</span>
+          </button>
+          <div class="dropdown-panel" id="panel-academics">
+            <a href="/academics/undergraduate">Undergraduate Programs</a>
+            <a href="/academics/graduate">Graduate Programs</a>
+            <a href="/academics/colleges">Colleges</a>
+          </div>
+        </li>
+        <li>
+          <button class="nav-trigger" aria-expanded="false" aria-controls="panel-admission" data-menu="admission">
+            Admission and Aid <span class="sr-only">Open the Admission and Aid menu</span>
+          </button>
+          <div class="dropdown-panel" id="panel-admission">
+            <a href="/admission-and-aid/undergraduate">Undergraduate Admission</a>
+            <a href="/admission-and-aid/graduate">Graduate Admission</a>
+            <a href="/admission-and-aid/financial-aid">Financial Aid</a>
+          </div>
+        </li>
+        <li>
+          <button class="nav-trigger" aria-expanded="false" aria-controls="panel-student" data-menu="student">
+            Student Experience <span class="sr-only">Open the Student Experience menu</span>
+          </button>
+          <div class="dropdown-panel" id="panel-student">
+            <a href="/student-experience/housing">Housing</a>
+            <a href="/student-experience/clubs">Clubs &amp; Organizations</a>
+            <a href="/student-experience/athletics">Athletics</a>
+          </div>
+        </li>
+        <li>
+          <button class="nav-trigger" aria-expanded="false" aria-controls="panel-research" data-menu="research">
+            Research <span class="sr-only">Open the Research menu</span>
+          </button>
+          <div class="dropdown-panel" id="panel-research">
+            <a href="/research/centers">Research Centers</a>
+            <a href="/research/faculty">Faculty Research</a>
+          </div>
+        </li>
+        <li><a class="nav-link" href="/about">About</a></li>
+      </div>
+
+      <li style="margin-left: auto;">
         <button
           class="site-search__toggle"
           type="button"
@@ -579,7 +508,6 @@
     </ul>
   </nav>
 
-  <!-- condensed menu shown via hamburger once scrolled -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="/academics">Academics</a>
     <a href="/admission-and-aid">Admission and Aid</a>
@@ -589,13 +517,8 @@
     <a href="https://www.iit.edu/directory" target="_blank" rel="noopener">Directory</a>
     <a href="https://www.iit.edu/news" target="_blank" rel="noopener">News</a>
   </div>
-
 </header>
 
-<!-- ════════════════════════════════════════════════════════
-     PAGE BANNER (was the original bare <header>) — introduces
-     this specific page, sits below the institutional nav.
-     ════════════════════════════════════════════════════════ -->
 <div class="page-banner">
   <span class="iit-badge">IIT</span>
   <div class="header-text">
@@ -605,14 +528,12 @@
 </div>
 
 <main>
-
   <p class="intro">
     Real radio frequency spectrum measurements collected by the IIT Spectrum Observatory,
     located on the rooftop of IIT Tower at 10 W. 35th Street, Chicago. Click any allocation
     segment below to explore its power distribution, spectrogram, and data matrix.
   </p>
 
-  <!-- Allocation chart -->
   <div>
     <div class="section-title">Frequency Allocation — 30 to 54 MHz (NTIA)</div>
     <section class="chart-shell" aria-label="30 to 54 MHz frequency allocation chart">
@@ -707,264 +628,19 @@
             <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
             <span class="cell bg-base-red"></span>
           </button>
-
-          <button class="column" data-center="true" style="flex: 1" onclick="window.location.href='/square/land_mobile_39.0_40.0'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 2" onclick="window.location.href='/square/mobile_40.0_42.0'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 1.69" onclick="window.location.href='/square/land_mobile_42.0_43.69'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical">Land Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 2.91" onclick="window.location.href='/square/mobile_43.69_46.6'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .4" onclick="window.location.href='/square/land_mobile_46.6_47.0'">
-            <span class="cell bg-mobile"><span class="chart-label vertical small">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical small">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 2.6" onclick="window.location.href='/square/mobile_47.0_49.6'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .4" onclick="window.location.href='/square/mobile_49.6_50.0'">
-            <span class="cell bg-mobile"><span class="chart-label vertical small">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical small">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 4" onclick="window.location.href='/square/amateur_50.0_54.0'">
-            <span class="cell bg-amateur" style="grid-row: 1 / 4;">
-              <span class="chart-label normal" style="font-size: 20px;">Amateur</span>
-            </span>
-          </button>
-        </div>
-
-        <div class="below">
-          <div class="mhz">30 MHz</div>
-          <div class="ism">ISM - 40.68 <small>+-.02 MHz</small></div>
-          <div></div>
         </div>
       </div>
     </section>
   </div>
-
-  <!-- Histogram -->
-  <div class="card">
-    <div class="section-title">Power Distribution — Full Band (30–54 MHz)</div>
-    <div id="histogram"></div>
-    <p class="caption">
-      Distribution of all ~984,000 power readings across the full 30–54 MHz band.
-      Click any allocation segment above to see its specific distribution.
-    </p>
-  </div>
-
-  <!-- Heatmap -->
-  <div class="card">
-    <div class="section-title">Spectrogram — Power vs. Time and Frequency</div>
-    <div id="heatmap"></div>
-  </div>
-
-  <!-- Stats -->
-  <div class="card">
-    <div class="section-title">Summary Statistics — Full Band</div>
-    <div class="stats-grid" id="stats-grid"></div>
-  </div>
-
 </main>
 
 <script>
-// ════════════════════════════════════════════════════════
-// STICKY HEADER BEHAVIOR
-// ════════════════════════════════════════════════════════
-(function(){
-  const header    = document.getElementById('siteHeader');
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-
-  // 1. toggle condensed style on scroll
-  const SCROLL_THRESHOLD = 60;
-  let ticking = false;
-  function onScroll(){
-    if (!ticking){
-      requestAnimationFrame(() => {
-        header.classList.toggle('is-scrolled', window.scrollY > SCROLL_THRESHOLD);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  // 2. dropdown menus (Academics / Admission and Aid / Student Experience / Research)
-  const triggers = document.querySelectorAll('.nav-trigger');
-  function closeAllPanels(except){
-    triggers.forEach(btn => {
-      if (btn === except) return;
-      btn.setAttribute('aria-expanded', 'false');
-      document.getElementById(btn.getAttribute('aria-controls')).classList.remove('open');
-    });
-  }
-  triggers.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = document.getElementById(btn.getAttribute('aria-controls'));
-      const isOpen = panel.classList.contains('open');
-      closeAllPanels(btn);
-      panel.classList.toggle('open', !isOpen);
-      btn.setAttribute('aria-expanded', String(!isOpen));
-    });
+  // Simple loader script removal once fully compiled
+  window.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('loading-overlay');
+    if(overlay) overlay.classList.add('hidden');
   });
-
-  // 3. hamburger menu (condensed state)
-  if (hamburger){
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', String(isOpen));
-    });
-  }
-
-  // 3b. search toggle — reads its own data-button-* attributes
-  const searchToggle = document.querySelector('.site-search__toggle');
-  const searchPanel  = document.getElementById('searchPanel');
-  if (searchToggle && searchPanel){
-    const srLabel = searchToggle.querySelector('.show-for-sr');
-    searchToggle.addEventListener('click', () => {
-      const opening = searchToggle.getAttribute('aria-expanded') !== 'true';
-      searchToggle.setAttribute('aria-expanded', String(opening));
-      document.body.classList.toggle(searchToggle.dataset.buttonOpenClass, opening);
-      searchPanel.hidden = !opening;
-      srLabel.textContent = opening
-        ? searchToggle.dataset.buttonCloseText
-        : searchToggle.dataset.buttonOpenText;
-      if (opening) searchPanel.querySelector('input').focus();
-    });
-  }
-
-  // 4. click outside / Escape closes everything
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.main-nav')) closeAllPanels(null);
-    if (!e.target.closest('.scrolled-actions')) mobileMenu.classList.remove('open');
-    if (searchToggle && !e.target.closest('.site-search__toggle') && !e.target.closest('.search-panel')){
-      searchToggle.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove(searchToggle.dataset.buttonOpenClass);
-      searchPanel.hidden = true;
-      searchToggle.querySelector('.show-for-sr').textContent = searchToggle.dataset.buttonOpenText;
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape'){
-      closeAllPanels(null);
-      mobileMenu.classList.remove('open');
-      if (searchToggle){
-        searchToggle.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove(searchToggle.dataset.buttonOpenClass);
-        searchPanel.hidden = true;
-        searchToggle.querySelector('.show-for-sr').textContent = searchToggle.dataset.buttonOpenText;
-      }
-    }
-  });
-})();
-</script>
-
-<script>
-// ════════════════════════════════════════════════════════
-// SPECTRUM OBSERVATORY DASHBOARD (unchanged from your original)
-// ════════════════════════════════════════════════════════
-const LAYOUT_BASE = {
-  paper_bgcolor: "#fff",
-  plot_bgcolor:  "#fff",
-  font: { color: "#1a1a1a", family: "Arial, Helvetica, sans-serif", size: 11 },
-  margin: { t: 20, r: 20, b: 50, l: 65 },
-  xaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-  yaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-};
-const CONFIG = { responsive: true, displayModeBar: false };
-
-async function loadHistogram() {
-  const res = await fetch("/api/histogram");
-  const d = await res.json();
-  const edges = d.edges;
-  const x = edges.slice(0, -1).map((e, i) => (e + edges[i+1]) / 2);
-  Plotly.react("histogram", [{
-    x, y: d.counts, type: "bar",
-    marker: { color: "#CC0000" },
-    hovertemplate: "%{x:.1f} dBm — %{y:,}<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Power (dBm)" } },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Count" } },
-    bargap: 0,
-  }, CONFIG);
-}
-
-async function loadHeatmap() {
-  const res = await fetch("/api/data");
-  const d = await res.json();
-  Plotly.react("heatmap", [{
-    z: d.powers, x: d.freqs, y: d.timestamps,
-    type: "heatmap",
-    colorscale: "Viridis",
-    colorbar: { title: { text: "dBm", side: "right" }, tickfont: { color: "#333" } },
-    hovertemplate: "Freq: %{x:.2f} MHz<br>Time: %{y}<br>Power: %{z:.1f} dBm<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    margin: { t: 20, r: 80, b: 50, l: 80 },
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Frequency (MHz)" }, range: [30, 54] },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Time (Chicago)" }, autorange: "reversed" },
-  }, CONFIG);
-}
-
-async function loadStats() {
-  const res = await fetch("/api/stats");
-  const d = await res.json();
-  const items = [
-    { label: "Frequency Range", value: "30–54", unit: "MHz" },
-    { label: "Sweeps", value: d.num_sweeps },
-    { label: "Min Power", value: d.min_power.toFixed(1), unit: "dBm" },
-    { label: "Max Power", value: d.max_power.toFixed(1), unit: "dBm" },
-    { label: "Mean Power", value: d.mean_power.toFixed(1), unit: "dBm" },
-    { label: "Noise Floor (p10)", value: d.noise_floor.toFixed(1), unit: "dBm" },
-    { label: "Spectral Occupancy", value: d.occupancy_pct.toFixed(1), unit: "%",
-      note: "% of readings exceeding noise floor by >6 dB" },
-  ];
-  document.getElementById("stats-grid").innerHTML = items.map(it => `
-    <div class="stat-item">
-      <div class="stat-label">${it.label}</div>
-      <div class="stat-value">${it.value}${it.unit ? `<span class="stat-unit">${it.unit}</span>` : ""}</div>
-      ${it.note ? `<div class="stat-note">${it.note}</div>` : ""}
-    </div>`).join("");
-}
-
-async function boot() {
-  try {
-    await Promise.all([loadHistogram(), loadHeatmap(), loadStats()]);
-  } finally {
-    const o = document.getElementById("loading-overlay");
-    o.classList.add("hidden");
-    setTimeout(() => o.remove(), 400);
-  }
-}
-boot();
 </script>
 </body>
 </html>
+
