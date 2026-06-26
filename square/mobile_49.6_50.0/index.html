@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile / Fixed — IIT Spectrum Observatory</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff; color: #1a1a1a; font-family: Arial, Helvetica, sans-serif; min-height: 100vh; }
+    header { background: #fff; border-bottom: 3px solid #CC0000; padding: 1rem 2rem; display: flex; align-items: center; gap: 1.25rem; }
+    .iit-badge { background: #CC0000; color: #fff; font-weight: 900; font-size: 1.1rem; padding: 0.25rem 0.6rem; border-radius: 3px; letter-spacing: 0.05em; flex-shrink: 0; }
+    .header-text h1 { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+    .header-text .subtitle { font-size: 0.78rem; color: #555; margin-top: 2px; }
+    .back-btn { margin-left: auto; font-size: 0.78rem; color: #CC0000; text-decoration: none; border: 1px solid #CC0000; padding: 0.3rem 0.75rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+    .back-btn:hover { background: #CC0000; color: #fff; }
+    main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2rem; }
+    .section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
+    .card { background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 1.25rem 1.5rem; }
+    .matrix-wrap { overflow: auto; max-height: 480px; border: 1px solid #ddd; border-radius: 3px; font-size: 0.68rem; }
+    table.matrix { border-collapse: collapse; white-space: nowrap; }
+    table.matrix th, table.matrix td { padding: 3px 7px; border: 1px solid #e8e8e8; text-align: right; }
+    table.matrix thead th { background: #f2f2f2; font-weight: 700; position: sticky; top: 0; z-index: 2; border-bottom: 2px solid #ccc; }
+    table.matrix thead th:first-child { position: sticky; left: 0; z-index: 3; text-align: center; }
+    table.matrix tbody td:first-child { background: #f8f8f8; font-weight: 700; position: sticky; left: 0; z-index: 1; border-right: 2px solid #ccc; }
+    table.matrix td.heat-cell { font-family: monospace; font-size: 0.65rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; }
+    .stat-item { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 3px; padding: 0.75rem 1rem; }
+    .stat-label { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.25rem; }
+    .stat-value { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; }
+    .stat-unit { font-size: 0.7rem; color: #666; margin-left: 2px; }
+    .stat-note { font-size: 0.65rem; color: #777; margin-top: 0.25rem; line-height: 1.4; }
+    #loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; gap: 1rem; transition: opacity 0.3s; }
+    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner { width: 40px; height: 40px; border: 3px solid #ddd; border-top-color: #CC0000; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-overlay p { font-size: 0.85rem; color: #666; }
+    .caption { font-size: 0.75rem; color: #666; line-height: 1.5; margin-top: 0.75rem; }
+    .meta-chip { display: inline-block; background: #f0f0f0; border: 1px solid #ddd; border-radius: 3px; padding: 0.2rem 0.6rem; font-size: 0.72rem; color: #444; margin-right: 0.4rem; }
+  </style>
+</head>
+<body>
+
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Loading allocation data…</p>
+</div>
+
+<header>
+  <span class="iit-badge">IIT</span>
+  <div class="header-text">
+    <h1>Mobile / Fixed &mdash; 49.6–50.0 MHz</h1>
+    <div class="subtitle">IIT Spectrum Observatory &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; January 1, 2018</div>
+  </div>
+  <a class="back-btn" href="../../">← Back to Overview</a>
+</header>
+
+<main>
+
+  <div>
+    <span class="meta-chip">Allocation: <strong>Mobile / Fixed</strong></span>
+    <span class="meta-chip">Range: <strong>49.6–50.0 MHz</strong></span>
+    <span class="meta-chip" id="chip-cols">Loading…</span>
+    <span class="meta-chip">123 sweeps</span>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Summary Statistics</div>
+    <div class="stats-grid" id="stats-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Power Distribution — 49.6–50.0 MHz</div>
+    <div id="histogram"></div>
+    <p class="caption">
+      Distribution of all power readings within the Mobile / Fixed allocation
+      (49.6–50.0 MHz) across all 123 time sweeps on January 1st, 2018.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Raw Power Matrix (dBm) — rows = sweeps, columns = frequency points</div>
+    <div class="matrix-wrap">
+      <table class="matrix" id="matrix-table">
+        <thead id="matrix-head"></thead>
+        <tbody id="matrix-body"></tbody>
+      </table>
+    </div>
+    <p class="caption">
+      Each row is one time sweep (Chicago local time). Each column is one frequency point in MHz.
+      Values are in dBm.
+    </p>
+  </div>
+
+</main>
+
+<script>
+const LAYOUT_BASE = {
+  paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+  font: { color: "#1a1a1a", family: "Arial, Helvetica, sans-serif", size: 11 },
+  margin: { t: 20, r: 20, b: 50, l: 65 },
+  xaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
+  yaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
+};
+const CONFIG = { responsive: true, displayModeBar: false };
+
+function dbmColor(val, minVal, maxVal) {
+  const t = Math.max(0, Math.min(1, (val - minVal) / (maxVal - minVal)));
+  return `rgb(255,${Math.round(255*(1-t*0.85))},${Math.round(255*(1-t))})`;
+}
+
+async function boot() {
+  const [sqRes, histRes, statsRes] = await Promise.all([
+    fetch("../../data/square/mobile_49.6_50.0/data.json"),
+    fetch("../../data/square/mobile_49.6_50.0/histogram.json"),
+    fetch("../../data/square/mobile_49.6_50.0/stats.json"),
+  ]);
+  const sq    = await sqRes.json();
+  const hist  = await histRes.json();
+  const stats = await statsRes.json();
+
+  document.getElementById("chip-cols").textContent = `${sq.num_cols} frequency columns`;
+
+  const statItems = [
+    { label: "Frequency Range", value: `${stats.freq_min_mhz}\u2013${stats.freq_max_mhz}`, unit: "MHz" },
+    { label: "Sweeps", value: stats.num_sweeps },
+    { label: "Freq Columns", value: stats.num_cols },
+    { label: "Min Power", value: stats.min_power.toFixed(1), unit: "dBm" },
+    { label: "Max Power", value: stats.max_power.toFixed(1), unit: "dBm" },
+    { label: "Mean Power", value: stats.mean_power.toFixed(1), unit: "dBm" },
+    { label: "Noise Floor (p10)", value: stats.noise_floor.toFixed(1), unit: "dBm" },
+    { label: "Spectral Occupancy", value: stats.occupancy_pct.toFixed(1), unit: "%", note: "% readings >6 dB above noise floor" },
+  ];
+  document.getElementById("stats-grid").innerHTML = statItems.map(it => `
+    <div class="stat-item">
+      <div class="stat-label">${it.label}</div>
+      <div class="stat-value">${it.value}${it.unit ? `<span class="stat-unit">${it.unit}</span>` : ""}</div>
+      ${it.note ? `<div class="stat-note">${it.note}</div>` : ""}
+    </div>`).join("");
+
+  const edges = hist.edges;
+  const x = edges.slice(0, -1).map((e, i) => (e + edges[i+1]) / 2);
+  Plotly.react("histogram", [{
+    x, y: hist.counts, type: "bar",
+    marker: { color: "#CC0000" },
+    hovertemplate: "%{x:.1f} dBm \u2014 %{y:,}<extra></extra>",
+  }], {
+    ...LAYOUT_BASE,
+    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Power (dBm)" } },
+    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Count" } },
+    bargap: 0,
+  }, CONFIG);
+
+  const powers = sq.powers;
+  const freqs  = sq.freqs;
+  const timestamps = sq.timestamps;
+  const minVal = stats.min_power, maxVal = stats.max_power;
+
+  const head = document.getElementById("matrix-head");
+  const body = document.getElementById("matrix-body");
+  const thRow = document.createElement("tr");
+  const thTime = document.createElement("th"); thTime.textContent = "Time (CDT)"; thRow.appendChild(thTime);
+  freqs.forEach(f => { const th = document.createElement("th"); th.textContent = f.toFixed(3); thRow.appendChild(th); });
+  head.appendChild(thRow);
+
+  powers.forEach((row, ri) => {
+    const tr = document.createElement("tr");
+    const tdTime = document.createElement("td"); tdTime.textContent = timestamps[ri]; tr.appendChild(tdTime);
+    row.forEach(val => {
+      const td = document.createElement("td");
+      td.className = "heat-cell";
+      td.textContent = val.toFixed(1);
+      td.style.background = dbmColor(val, minVal, maxVal);
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  const overlay = document.getElementById("loading-overlay");
+  overlay.classList.add("hidden");
+  setTimeout(() => overlay.remove(), 400);
+}
+boot();
+</script>
+</body>
+</html>
