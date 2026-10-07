@@ -1,158 +1,171 @@
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Illinois Tech site header, matched to www.iit.edu (desktop >= 1025px):
+   60px grey utility bar, white logo row, full-width red menu bar with grey dropdowns.
+   When the page is scrolled it condenses to a white bar with the black logo and CTA buttons. */
+.site-header {
+  --iit-red: #cc0000;
+  --iit-red-dark: #610000;
+  --iit-grey: #76777b;
+  --iit-menu-grey: #444444;
+  --iit-orange: #ff9900;
+  --iit-ink: #222222;
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  background: #fff;
+  color: var(--iit-ink);
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  transition: box-shadow .25s ease;
+}
+.site-header *, .site-header *::before, .site-header *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.site-header ul { list-style: none; }
+.site-header a { text-decoration: none; }
+.site-header .show-for-sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;
+}
+.site-header .sh-container { max-width: 1160px; margin: 0 auto; padding: 0 20px; position: relative; }
 
-    body {
-      background: #fff;
-      color: #1a1a1a;
-      font-family: Arial, Helvetica, sans-serif;
-      min-height: 100vh;
-    }
+/* ---------- grey utility bar ---------- */
+.site-header .sh-top { background: var(--iit-grey); height: 60px; transition: height .25s ease, opacity .2s ease; }
+/* iit.edu lets this row span the container's padding and sit 10px from the top. */
+.site-header .sh-top__inner { display: flex; justify-content: flex-end; align-items: flex-start; padding: 10px 0 0; }
+.site-header .utility-menu { height: 46px; display: flex; align-items: center; }
+.site-header .utility-menu .menu { display: flex; }
+.site-header .utility-menu a {
+  display: block; color: #fff; font-weight: 700; font-size: 16px; line-height: 1; padding: 10px 15px;
+}
+.site-header .utility-menu a:hover { text-decoration: underline; }
 
-    .site-header{
-      --red: #cc0000;
-      --red-dark: #a30000;
-      --hdr-ink: #222;
-      --hdr-bg: #f4f4f4;
-      --h-top: 40px;
-      --h-logo: 96px;
-      --h-nav: 52px;
+.site-header .audience-menu { position: relative; height: 46px; }
+.site-header .audience-item { position: relative; width: 175px; }
+.site-header .audience-toggle {
+  display: flex; align-items: center; justify-content: space-between; width: 100%;
+  background: none; border: 0; cursor: pointer; font: inherit;
+  color: #fff; font-weight: 700; font-size: 16px; line-height: 1; padding: 15px 10px 15px 18px;
+  position: relative; z-index: 2;
+}
+.site-header .audience-toggle .chevron { width: 9px; height: 16px; fill: currentColor; flex-shrink: 0; }
+.site-header .audience-menu .submenu {
+  display: none; position: absolute; right: 0; top: 100%; min-width: 175px; z-index: 1;
+  background: #fff; box-shadow: 0 4px 5px rgba(0, 0, 0, .12);
+}
+.site-header .audience-menu .submenu li { padding: 0 18px; }
+.site-header .audience-menu .submenu a {
+  display: block; color: #000; font-size: 14px; line-height: 1; padding: 15px 0;
+}
+.site-header .audience-menu .submenu li:not(:last-child) a { border-bottom: 2px dashed #f4f4f4; }
+.site-header .audience-menu .submenu a:hover { color: var(--iit-red); }
+.site-header .audience-item:hover,
+.site-header .audience-item:focus-within,
+.site-header .audience-item.open { background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .22); }
+.site-header .audience-item:hover .audience-toggle,
+.site-header .audience-item:focus-within .audience-toggle,
+.site-header .audience-item.open .audience-toggle { color: var(--iit-ink); }
+.site-header .audience-item:hover .chevron,
+.site-header .audience-item:focus-within .chevron,
+.site-header .audience-item.open .chevron { fill: var(--iit-orange); transform: rotate(90deg); }
+.site-header .audience-item:hover .submenu,
+.site-header .audience-item:focus-within .submenu,
+.site-header .audience-item.open .submenu { display: block; }
 
-      position: sticky;
-      top: 0;
-      z-index: 150;
-      background:#fff;
-      font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
-      color: var(--hdr-ink);
-      transition: box-shadow .25s ease;
-    }
-    .site-header.is-scrolled{
-      box-shadow: 0 2px 10px rgba(0,0,0,.15);
-    }
+/* ---------- logo row ---------- */
+.site-header .sh-logo-row {
+  display: flex; align-items: center; justify-content: space-between; transition: padding .25s ease;
+}
+.site-header .logo { display: block; width: 300px; max-width: 60vw; margin: 36px 0 36px 16px; transition: width .25s ease, margin .25s ease; }
+.site-header .logo svg { display: block; width: 100%; height: auto; }
+.site-header .logo--black { display: none; }
+.site-header .scrolled-actions { display: none; align-items: center; gap: 10px; }
+.site-header .btn-cta {
+  background: var(--iit-red); color: #fff; font-weight: 700; font-size: 15px; line-height: 1;
+  padding: 12px 16px; border-radius: 2px;
+}
+.site-header .btn-cta:hover { background: #a30000; }
+.site-header .hamburger { background: none; border: none; cursor: pointer; width: 32px; height: 24px; position: relative; margin-left: 6px; }
+.site-header .hamburger span,
+.site-header .hamburger span::before,
+.site-header .hamburger span::after {
+  content: ""; position: absolute; left: 0; width: 100%; height: 3px; background: #222; transition: .2s;
+}
+.site-header .hamburger span { top: 50%; transform: translateY(-50%); }
+.site-header .hamburger span::before { top: -9px; }
+.site-header .hamburger span::after { top: 9px; }
 
-    .site-header .utility-bar{
-      background: var(--hdr-bg);
-      border-bottom: 1px solid #e0e0e0;
-      height: var(--h-top);
-      overflow: hidden;
-      transition: height .25s ease, opacity .2s ease;
-    }
-    .site-header .utility-bar ul{
-      list-style:none; display:flex; gap:20px; height:100%; align-items:center;
-      justify-content:flex-end; padding:0 24px;
-    }
-    .site-header .utility-bar a{
-      color:#444; text-decoration:none; font-size:.78rem; letter-spacing:.02em;
-    }
-    .site-header .utility-bar a:hover{ color: var(--red); text-decoration:underline; }
-    .site-header.is-scrolled .utility-bar{ height:0; opacity:0; border-bottom:none; }
+/* ---------- red main menu bar ---------- */
+.site-header .sh-nav { background: var(--iit-red); transition: opacity .2s ease; }
+.site-header .sh-nav__inner { display: flex; align-items: stretch; min-height: 57.5px; }
+.site-header .main-nav .menu { display: flex; height: 100%; }
+.site-header .main-nav .menu-item { position: relative; }
+.site-header .main-nav .menu-item > a {
+  display: block; color: #fff; font-size: 18px; font-weight: 700; line-height: 31.5px;
+  padding: 13px 20px; text-align: center; background: var(--iit-red); white-space: nowrap;
+}
+.site-header .main-nav .menu-item:hover > a,
+.site-header .main-nav .menu-item:focus-within > a { background: var(--iit-red-dark); }
+.site-header .main-nav .submenu {
+  display: none; position: absolute; left: 0; top: 100%; z-index: 60;
+  min-width: 16rem; background: var(--iit-menu-grey); padding: 10px 30px;
+}
+.site-header .main-nav .menu-item:last-child .submenu { left: auto; right: 0; }
+.site-header .main-nav .menu-item:hover .submenu,
+.site-header .main-nav .menu-item:focus-within .submenu { display: block; }
+.site-header .main-nav .submenu a {
+  display: block; color: #fff; font-size: 16px; font-weight: 400; line-height: 1.75;
+  padding: 10px 0; text-align: left; white-space: nowrap;
+}
+.site-header .main-nav .submenu li:not(:last-child) a { border-bottom: 1px solid rgba(244, 244, 244, .14); margin-bottom: 5px; }
+.site-header .main-nav .submenu a:hover,
+.site-header .main-nav .submenu a:focus { color: var(--iit-orange); }
 
-    .site-header .logo-row{
-      height: var(--h-logo);
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 0 24px;
-      transition: height .25s ease;
-    }
-    .site-header.is-scrolled .logo-row{ height:64px; }
+.site-header .site-search__toggle {
+  position: absolute; right: 0; bottom: 5px; background: transparent; border: 0; cursor: pointer;
+  padding: 8px; line-height: 0; color: #fff;
+}
+.site-header .site-search__toggle .search-icon { width: 24px; height: 24px; fill: currentColor; transition: fill 250ms ease-in-out; }
+.site-header .site-search__toggle:hover .search-icon,
+.site-header .site-search__toggle[aria-expanded="true"] .search-icon { fill: var(--iit-orange); }
+.site-header .search-panel { background: #fff; border-bottom: 1px solid #e4e4e4; box-shadow: 0 4px 6px rgba(0, 0, 0, .08); }
+.site-header .search-panel form { display: flex; gap: 10px; padding-top: 16px; padding-bottom: 16px; }
+.site-header .search-panel input {
+  flex: 1; border: 1px solid #ccc; padding: 10px 12px; font: inherit; font-size: 16px; line-height: 1.2;
+}
+.site-header .search-panel button {
+  background: var(--iit-red); color: #fff; border: 0; padding: 10px 20px; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: 16px; line-height: 1.2;
+}
 
-    .site-header .logo{
-      display:block; height:48px; transition: height .25s ease;
-    }
-    .site-header .logo svg{ height:100%; width:auto; display:block; }
-    .site-header.is-scrolled .logo{ height:32px; }
+/* ---------- mobile / condensed menu panel ---------- */
+.site-header .mobile-menu {
+  display: none; position: absolute; top: 100%; right: 0; width: min(320px, 100vw);
+  background: var(--iit-menu-grey); box-shadow: 0 8px 20px rgba(0, 0, 0, .18); padding: 10px 30px;
+}
+.site-header .mobile-menu.open { display: block; }
+.site-header .mobile-menu a { display: block; color: #fff; font-weight: 700; font-size: 17px; padding: 10px 0; }
+.site-header .mobile-menu li:not(:last-child) a { border-bottom: 1px solid rgba(244, 244, 244, .14); }
+.site-header .mobile-menu .mm-utility a { font-weight: 400; font-size: 15px; }
+.site-header .mobile-menu a:hover { color: var(--iit-orange); }
 
-    .site-header .logo--red{ display:block; }
-    .site-header .logo--black{ display:none; }
-    .site-header.is-scrolled .logo--red{ display:none; }
-    .site-header.is-scrolled .logo--black{ display:block; }
+/* ---------- condensed (scrolled) state ---------- */
+.site-header.is-scrolled { box-shadow: 0 2px 10px rgba(0, 0, 0, .15); }
+.site-header.is-scrolled .sh-top { height: 0; opacity: 0; overflow: hidden; }
+.site-header.is-scrolled .sh-nav { display: none; }
+.site-header.is-scrolled .logo { width: 210px; margin: 18px 0 18px 16px; }
+.site-header.is-scrolled .logo--red { display: none; }
+.site-header.is-scrolled .logo--black { display: block; }
+.site-header.is-scrolled .scrolled-actions { display: flex; }
 
-    .site-header .site-search__toggle{
-      margin-left:auto; background:none; border:none; color:#fff;
-      cursor:pointer; padding:6px; display:flex; align-items:center;
-    }
-    .site-header .search-icon{ width:18px; height:18px; fill:#fff; }
-    .site-header .search-panel{
-      position:absolute; top:100%; right:24px; background:#fff;
-      box-shadow:0 8px 20px rgba(0,0,0,.18); padding:16px; z-index:60;
-      display:flex; gap:8px;
-    }
-    .site-header .search-panel input{
-      border:1px solid #ccc; padding:8px 10px; font-size:.9rem; min-width:220px;
-    }
-    .site-header .search-panel button{
-      background: var(--red); color:#fff; border:none; padding:8px 14px;
-      cursor:pointer; font-size:.85rem; font-weight:600;
-    }
-
-    .site-header .scrolled-actions{ display:none; align-items:center; gap:10px; }
-    .site-header.is-scrolled .scrolled-actions{ display:flex; }
-
-    .site-header .btn-cta{
-      background: var(--red); color:#fff; border:none;
-      padding:10px 16px; font-size:.85rem; font-weight:600;
-      text-decoration:none; cursor:pointer; border-radius:2px;
-    }
-    .site-header .btn-cta:hover{ background: var(--red-dark); }
-
-    .site-header .hamburger{
-      background:none; border:none; cursor:pointer;
-      width:32px; height:24px; position:relative;
-    }
-    .site-header .hamburger span,
-    .site-header .hamburger span::before,
-    .site-header .hamburger span::after{
-      content:""; position:absolute; left:0; width:100%; height:3px;
-      background:#222; transition:.2s;
-    }
-    .site-header .hamburger span{ top:50%; transform:translateY(-50%); }
-    .site-header .hamburger span::before{ top:-9px; }
-    .site-header .hamburger span::after{ top:9px; }
-
-    .site-header .main-nav{
-      background: var(--red);
-      height: var(--h-nav);
-      overflow:hidden;
-      transition: height .25s ease, opacity .2s ease;
-    }
-    .site-header.is-scrolled .main-nav{ height:0; opacity:0; }
-    .site-header .main-nav ul{
-      list-style:none; display:flex; gap:4px; height:100%; align-items:center;
-      padding:0 24px;
-    }
-    .site-header .main-nav li{ position:relative; height:100%; display:flex; align-items:center; }
-
-    .site-header .nav-link, .site-header .nav-trigger{
-      background:none; border:none; color:#fff; font-size:.95rem;
-      font-weight:600; padding:10px 14px; cursor:pointer;
-      text-decoration:none; display:flex; align-items:center; gap:6px;
-      height:100%; font-family: inherit;
-    }
-    .site-header .nav-trigger::after{ content:"▾"; font-size:.7em; }
-    .site-header .nav-link:hover, .site-header .nav-trigger:hover{ background: rgba(255,255,255,.15); }
-
-    .site-header .sr-only, .site-header .show-for-sr{
-      position:absolute; width:1px; height:1px; overflow:hidden;
-      clip:rect(0,0,0,0); white-space:nowrap;
-    }
-
-    .site-header .dropdown-panel{
-      position:absolute; top:100%; left:0; background:#fff;
-      color:#222; min-width:220px; box-shadow:0 8px 20px rgba(0,0,0,.18);
-      padding:12px 0; display:none; z-index:50;
-    }
-    .site-header .dropdown-panel.open{ display:block; }
-    .site-header .dropdown-panel a{
-      display:block; padding:8px 18px; color:#222; text-decoration:none; font-size:.9rem;
-    }
-    .site-header .dropdown-panel a:hover{ background: var(--hdr-bg); color: var(--red); }
-
-    .site-header .mobile-menu{
-      display:none; position:absolute; top:100%; right:0; background:#fff;
-      box-shadow:0 8px 20px rgba(0,0,0,.18); width:260px; padding:10px 0;
-    }
-    .site-header .mobile-menu.open{ display:block; }
-    .site-header .mobile-menu a{ display:block; padding:10px 18px; color:#222; text-decoration:none; font-size:.92rem; }
-    .site-header .mobile-menu a:hover{ background:var(--hdr-bg); color:var(--red); }
-
-    @media (prefers-reduced-motion: reduce){
-      .site-header, .site-header .utility-bar, .site-header .logo-row,
-      .site-header .logo, .site-header .main-nav{ transition:none !important; }
-    }
+/* ---------- below desktop width: logo + menu button, like iit.edu ---------- */
+@media (max-width: 1024px) {
+  .site-header .sh-top, .site-header .sh-nav { display: none; }
+  .site-header .logo { width: 220px; margin: 20px 0; }
+  .site-header .scrolled-actions { display: flex; }
+  .site-header .btn-cta { display: none; }
+  .site-header.is-scrolled .logo { width: 180px; margin: 16px 0; }
+}
+@media (max-width: 640px) {
+  .site-header .mobile-menu { width: 100vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header, .site-header .sh-top, .site-header .logo { transition: none !important; }
+}

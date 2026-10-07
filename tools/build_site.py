@@ -130,8 +130,7 @@ def main():
     legend = "".join(f'<span class="cat-{c}"><span class="cat-dot"></span>{CATEGORY_NAMES[c]}</span>'
                      for c in index["categories"])
     with open(os.path.join(REPO, "index.html"), "w") as fh:
-        fh.write(fill(template("index.html"), header=header, v=v, num_days=len(index["dates"]),
-                      status=escape(index["status"]), coverage=coverage_html(index["dates"]),
+        fh.write(fill(template("index.html"), header=header, v=v, num_days=len(index["dates"]), coverage=coverage_html(index["dates"]),
                       legend=legend, groups=groups_html, unreadable=unreadable_html(index)))
 
     # Pages are overwritten in place (deleting and recreating the folder makes synced
