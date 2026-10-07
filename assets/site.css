@@ -15,8 +15,17 @@ a { color: var(--red); }
 .iit-badge { background: var(--red); color: #fff; font-weight: 900; font-size: 1.1rem; padding: 0.25rem 0.6rem; border-radius: 3px; letter-spacing: 0.05em; flex-shrink: 0; }
 .header-text h1 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
 .header-text .subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 2px; letter-spacing: 0.02em; }
+.banner-links { margin-left: auto; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.banner-links .back-btn { margin-left: 0; }
 .back-btn { margin-left: auto; font-size: 0.78rem; color: var(--red); text-decoration: none; border: 1px solid var(--red); padding: 0.3rem 0.75rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
 .back-btn:hover { background: var(--red); color: #fff; }
+
+/* Prototype notice (under the header) and footer, on every page */
+.site-notice { background: #f2f2f2; border-bottom: 1px solid #ddd; color: #333; }
+.site-notice p { max-width: 1280px; margin: 0 auto; padding: 0.45rem 1.5rem; font-size: 0.8rem; line-height: 1.4; }
+.site-footer { border-top: 1px solid #ddd; background: #f8f8f8; color: #333; }
+.site-footer p { max-width: 1280px; margin: 0 auto; padding: 1.25rem 1.5rem 2rem; font-size: 0.8rem; line-height: 1.5; }
+.site-footer a { margin-left: 0.4rem; white-space: nowrap; }
 
 main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2rem; }
 .section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
@@ -38,6 +47,9 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: 
 .spinner { width: 40px; height: 40px; border: 3px solid var(--line); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 #loading-overlay p { font-size: 0.85rem; color: #666; }
+
+#settings-chips { display: contents; }
+.settings-warning { margin-top: 0.4rem; font-size: 0.8rem; line-height: 1.5; background: #fff4e5; border: 1px solid #f0b46a; border-left: 4px solid #d97a00; border-radius: 3px; padding: 0.6rem 0.9rem; max-width: 900px; }
 
 /* Category colours (bands.json "category") */
 .cat-broadcast     { --cat: #f2b705; --cat-ink: #1a1a1a; }
@@ -104,9 +116,20 @@ table.daily tbody tr:hover td { background: #fafafa; }
 table.daily tbody tr.selected td { background: #fdecec; }
 table.daily tbody tr.missing td { color: #bbb; cursor: default; }
 
+/* About page */
+.about h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+.about h3 { font-size: 0.85rem; margin: 1rem 0 0.4rem; }
+.about p, .about li { font-size: 0.88rem; line-height: 1.6; }
+.about ul { padding-left: 1.2rem; }
+.about-table { max-width: 360px; max-height: none; margin-top: 0.6rem; }
+.about .date-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.1rem 0.75rem; }
+.about .file-list li { font-size: 0.8rem; overflow-wrap: anywhere; }
+.about code { font-size: 0.78rem; }
+
 @media (max-width: 640px) {
   .page-banner { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; }
   .back-btn { margin-left: 0; }
+  .banner-links { margin-left: 0; }
   main { padding: 1rem 1rem 3rem; }
   .card { padding: 1rem; }
   .band-bar { height: 44px; }

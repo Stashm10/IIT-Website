@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap" />
-  <link rel="stylesheet" href="../../assets/header.css?v=739abf6fed" />
-  <link rel="stylesheet" href="../../assets/site.css?v=739abf6fed" />
+  <link rel="stylesheet" href="../../assets/header.css?v=02aa3b8cf8" />
+  <link rel="stylesheet" href="../../assets/site.css?v=02aa3b8cf8" />
 </head>
 <body data-root="../../" data-band-id="700-800--798-800">
 <div id="loading-overlay">
@@ -56,13 +56,20 @@
   <nav class="mobile-menu" id="mobileMenu" aria-label="Main menu"><ul><li><a href="https://www.iit.edu/academics" target="_blank" rel="noopener">Academics</a></li><li><a href="https://www.iit.edu/admissions-aid" target="_blank" rel="noopener">Admission and Aid</a></li><li><a href="https://www.iit.edu/student-experience" target="_blank" rel="noopener">Student Experience</a></li><li><a href="https://www.iit.edu/research" target="_blank" rel="noopener">Research</a></li><li><a href="https://www.iit.edu/about" target="_blank" rel="noopener">About</a></li><li class="mm-utility"><a href="https://www.iit.edu/directory/people" target="_blank" rel="noopener">Directory</a></li><li class="mm-utility"><a href="https://www.iit.edu/university-news" target="_blank" rel="noopener">News</a></li><li class="mm-utility"><a href="https://www.iit.edu/alumni" target="_blank" rel="noopener">Alumni</a></li><li class="mm-utility"><a href="https://www.iit.edu/events" target="_blank" rel="noopener">Events</a></li><li class="mm-utility"><a href="https://www.iit.edu/giving" target="_blank" rel="noopener">Giving</a></li><li class="mm-utility"><a href="https://www.iit.edu/mumbai" target="_blank" rel="noopener">Illinois Tech Mumbai</a></li></ul></nav>
 </header>
 
+<div class="site-notice" role="note">
+  <p>Research prototype by the IIT Spectrum Observatory project. This is not an official Illinois Tech web page.</p>
+</div>
+
 <div class="page-banner">
   <span class="iit-badge">IIT</span>
   <div class="header-text">
     <h1>700 MHz public safety narrowband (mobile) and guard band &mdash; 798–800 MHz</h1>
     <div class="subtitle">Group 700–800 MHz &nbsp;·&nbsp; IIT Spectrum Observatory &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; 2018</div>
   </div>
-  <a class="back-btn" href="../../#g-700-800">← Back to Overview</a>
+  <div class="banner-links">
+    <a class="back-btn" href="../../#g-700-800">← Back to Overview</a>
+    <a class="back-btn" href="../../about/">About the data</a>
+  </div>
 </div>
 <main>
   <div>
@@ -73,6 +80,8 @@
     <span class="meta-chip">73 frequency points</span>
     <span class="meta-chip" id="chip-days">…</span>
     <span class="meta-chip">Note: Narrowband mobile channels are 799–805 MHz; only the part inside this group is shown.</span>
+    <div id="settings-chips"></div>
+    <div class="settings-warning" id="settings-warning" role="note" hidden></div>
   </div>
 
   <div class="card picker">
@@ -120,7 +129,12 @@
     <p class="caption">All values in dBm. ≈ marks values read from a pooled histogram (accurate to the 0.5 dB bin width); single-day values are exact.</p>
   </div>
 </main>
-<script src="../../assets/header.js?v=739abf6fed"></script>
-<script src="../../assets/band.js?v=739abf6fed"></script>
+<footer class="site-footer">
+  <p>Research prototype by the IIT Spectrum Observatory project. This is not an official Illinois Tech web page.
+    <a href="../../about/">About the data</a></p>
+</footer>
+
+<script src="../../assets/header.js?v=02aa3b8cf8"></script>
+<script src="../../assets/band.js?v=02aa3b8cf8"></script>
 </body>
 </html>
