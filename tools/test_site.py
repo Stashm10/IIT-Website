@@ -93,7 +93,7 @@ NOTICE = "Research prototype by the IIT Spectrum Observatory project. This is no
 
 
 def all_pages():
-    return ["index.html", "about/index.html"] + [
+    return ["index.html"] + [
         os.path.relpath(p, REPO) for p in glob.glob(os.path.join(REPO, "band", "*", "index.html"))]
 
 
@@ -103,25 +103,6 @@ def test_every_page_has_notice_bar_and_footer():
         notice = html.index('<div class="site-notice"')
         assert notice > html.index("</header>"), f"{path}: notice must come right after the header"
         assert html.count(NOTICE) == 2, f"{path}: notice text should appear in the bar and the footer"
-        assert '<footer class="site-footer">' in html and "about/\">About the data</a>" in html, path
-
-
-def test_about_page_draft_sentence_follows_status():
-    import json as _json
-    from build_site import about_page
-    with open(os.path.join(REPO, "data", "index.json")) as fh:
-        index = _json.load(fh)
-    with open(os.path.join(REPO, "data", "settings.json")) as fh:
-        settings = _json.load(fh)
-    for b in index["bands"].values():
-        b["num_points"] = 10
-    sentence = "The breakdown inside each group is provisional and awaiting confirmation."
-    index["status"] = "DRAFT - proposal"
-    assert sentence in about_page(index, settings, "v")
-    index["status"] = "Confirmed by the observatory team"
-    assert sentence not in about_page(index, settings, "v")
-
-
-def test_about_page_has_credit_placeholder_only():
-    html = page("about/index.html")
-    assert "[[CREDITS — to be added]]" in html
+        assert '<footer class="site-footer">' in html, path
+        assert "About the data" not in html and 'href="about/"' not in html and "../../about/" not in html, \
+            f"{path}: link to the removed About page"

@@ -25,7 +25,6 @@ a { color: var(--red); }
 .site-notice p { max-width: 1280px; margin: 0 auto; padding: 0.45rem 1.5rem; font-size: 0.8rem; line-height: 1.4; }
 .site-footer { border-top: 1px solid #ddd; background: #f8f8f8; color: #333; }
 .site-footer p { max-width: 1280px; margin: 0 auto; padding: 1.25rem 1.5rem 2rem; font-size: 0.8rem; line-height: 1.5; }
-.site-footer a { margin-left: 0.4rem; white-space: nowrap; }
 
 main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 2rem; }
 .section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
@@ -115,16 +114,6 @@ table.daily tbody tr { cursor: pointer; }
 table.daily tbody tr:hover td { background: #fafafa; }
 table.daily tbody tr.selected td { background: #fdecec; }
 table.daily tbody tr.missing td { color: #bbb; cursor: default; }
-
-/* About page */
-.about h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
-.about h3 { font-size: 0.85rem; margin: 1rem 0 0.4rem; }
-.about p, .about li { font-size: 0.88rem; line-height: 1.6; }
-.about ul { padding-left: 1.2rem; }
-.about-table { max-width: 360px; max-height: none; margin-top: 0.6rem; }
-.about .date-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.1rem 0.75rem; }
-.about .file-list li { font-size: 0.8rem; overflow-wrap: anywhere; }
-.about code { font-size: 0.78rem; }
 
 @media (max-width: 640px) {
   .page-banner { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1rem; }
