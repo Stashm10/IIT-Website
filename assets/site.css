@@ -68,6 +68,8 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: 
 .band-bar { display: flex; height: 64px; border: 2px solid #1c1c1c; border-radius: 2px; overflow: hidden; }
 .band-seg { flex-basis: 0; min-width: 5px; background: var(--cat); color: var(--cat-ink); border-right: 1px solid rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.68rem; font-weight: 700; overflow: hidden; white-space: nowrap; transition: filter .12s; }
 .band-seg:last-child { border-right: 0; }
+.band-seg .seg-label { flex-shrink: 0; padding: 0 4px; }
+.band-seg.label-hidden .seg-label { visibility: hidden; }
 .band-seg:hover, .band-seg:focus-visible { filter: brightness(1.12) saturate(1.1); outline: 3px solid #000; outline-offset: -3px; }
 .band-ticks { position: relative; height: 1rem; font-size: 0.65rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .band-ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }

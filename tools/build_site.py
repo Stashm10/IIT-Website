@@ -70,10 +70,10 @@ def group_html(group, bands):
     last_tick = -1.0
     for b in bands:
         share = (b["high_mhz"] - b["low_mhz"]) / span
-        label = escape(band_range(b)) if share >= 0.09 else ""
         title = escape(f"{b['name']} — {band_range(b)} MHz")
         segs.append(f'<a class="band-seg cat-{b["category"]}" style="flex-grow:{share:.4f}" '
-                    f'href="band/{b["id"]}/" title="{title}" aria-label="{title}">{label}</a>')
+                    f'href="band/{b["id"]}/" title="{title}" aria-label="{title}">'
+                    f'<span class="seg-label" aria-hidden="true">{escape(band_range(b))}</span></a>')
         items.append(f'<a href="band/{b["id"]}/" class="cat-{b["category"]}"><span class="cat-dot"></span>'
                      f'<span class="bl-name">{escape(b["name"])}</span>'
                      f'<span class="bl-range">{band_range(b)} MHz</span></a>')
