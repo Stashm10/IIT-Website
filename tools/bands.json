@@ -1,0 +1,1402 @@
+{
+  "version": "draft-1 (2026-10-06)",
+  "status": "DRAFT - group list taken from the Wei & Hood IEEE RTC 2026 poster; the breakdown inside each group is a proposal and must be confirmed with the professor / PhD student before publication.",
+  "rules": {
+    "membership": "A frequency point f belongs to a band when low_mhz <= f < high_mhz.",
+    "one_subband_per_band": "Every band lies inside exactly one HDF5 sub-band. Bands are split wherever the observatory's sub-bands change (54, 108, 174, 225, 406, 698, 760, 780 MHz).",
+    "categories": [
+      "broadcast",
+      "aeronautical",
+      "satellite",
+      "federal",
+      "amateur",
+      "land-mobile",
+      "maritime",
+      "radiolocation",
+      "cellular",
+      "public-safety"
+    ]
+  },
+  "histogram_bins": {
+    "low_dbm": -150.0,
+    "high_dbm": 20.0,
+    "width_db": 0.5,
+    "count": 340
+  },
+  "groups": [
+    {
+      "id": "g-44-48",
+      "label": "44–48 MHz",
+      "low_mhz": 44,
+      "high_mhz": 48,
+      "description": "VHF low band: land mobile and federal fixed/mobile.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "44-48--44-46p6",
+          "low_mhz": 44,
+          "high_mhz": 46.6,
+          "name": "Land mobile (VHF low band)",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "Part of the 43.69–46.6 MHz non-federal allocation.",
+          "subband": {
+            "index_in_reference_file": 0,
+            "start_mhz": 30.0,
+            "stop_mhz": 54.0
+          }
+        },
+        {
+          "id": "44-48--46p6-47",
+          "low_mhz": 46.6,
+          "high_mhz": 47,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 0,
+            "start_mhz": 30.0,
+            "stop_mhz": 54.0
+          }
+        },
+        {
+          "id": "44-48--47-48",
+          "low_mhz": 47,
+          "high_mhz": 48,
+          "name": "Land mobile (VHF low band)",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "Part of the 47–49.6 MHz non-federal allocation.",
+          "subband": {
+            "index_in_reference_file": 0,
+            "start_mhz": 30.0,
+            "stop_mhz": 54.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-100-200",
+      "label": "100–200 MHz",
+      "low_mhz": 100,
+      "high_mhz": 200,
+      "description": "FM radio, aviation, satellites, amateur, land mobile, marine, federal and VHF television.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "100-200--100-108",
+          "low_mhz": 100,
+          "high_mhz": 108,
+          "name": "FM radio broadcasting",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "Upper part of the 88–108 MHz FM band.",
+          "subband": {
+            "index_in_reference_file": 1,
+            "start_mhz": 54.0,
+            "stop_mhz": 108.0
+          }
+        },
+        {
+          "id": "100-200--108-117p975",
+          "low_mhz": 108,
+          "high_mhz": 117.975,
+          "name": "Aeronautical radionavigation",
+          "services": "AERONAUTICAL RADIONAVIGATION",
+          "category": "aeronautical",
+          "note": "VOR and ILS localizer signals.",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--117p975-137",
+          "low_mhz": 117.975,
+          "high_mhz": 137,
+          "name": "Aeronautical mobile (air traffic voice)",
+          "services": "AERONAUTICAL MOBILE (R)",
+          "category": "aeronautical",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--137-138",
+          "low_mhz": 137,
+          "high_mhz": 138,
+          "name": "Satellite downlinks",
+          "services": "SPACE OPERATION, METEOROLOGICAL-SATELLITE, MOBILE-SATELLITE, SPACE RESEARCH (space-to-Earth)",
+          "category": "satellite",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--138-144",
+          "low_mhz": 138,
+          "high_mhz": 144,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "Shown in 1 MHz slices in the 'Fed 138–144 MHz' group.",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--144-148",
+          "low_mhz": 144,
+          "high_mhz": 148,
+          "name": "Amateur radio (2 m band)",
+          "services": "AMATEUR, AMATEUR-SATELLITE",
+          "category": "amateur",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--148-150p05",
+          "low_mhz": 148,
+          "high_mhz": 150.05,
+          "name": "Federal fixed and mobile; satellite uplinks",
+          "services": "FIXED, MOBILE, MOBILE-SATELLITE (Earth-to-space); RADIONAVIGATION-SATELLITE (149.9–150.05)",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--150p05-150p8",
+          "low_mhz": 150.05,
+          "high_mhz": 150.8,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--150p8-156p2475",
+          "low_mhz": 150.8,
+          "high_mhz": 156.2475,
+          "name": "Land mobile (VHF high band)",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--156p2475-157p1875",
+          "low_mhz": 156.2475,
+          "high_mhz": 157.1875,
+          "name": "Maritime mobile (VHF marine)",
+          "services": "MARITIME MOBILE",
+          "category": "maritime",
+          "note": "Includes the 156.8 MHz distress and calling channel.",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--157p1875-161p575",
+          "low_mhz": 157.1875,
+          "high_mhz": 161.575,
+          "name": "Mobile (land mobile and maritime)",
+          "services": "MOBILE except aeronautical mobile",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--161p575-162p0375",
+          "low_mhz": 161.575,
+          "high_mhz": 162.0375,
+          "name": "Maritime mobile and land mobile (includes AIS)",
+          "services": "MARITIME MOBILE, LAND MOBILE, MARITIME MOBILE (AIS)",
+          "category": "maritime",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--162p0375-174",
+          "low_mhz": 162.0375,
+          "high_mhz": 174,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "Includes NOAA Weather Radio (162.400–162.550 MHz); 173.2–173.4 MHz is non-federal. Shown in 1 MHz slices in the 'Fed 162–174 MHz' group.",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "100-200--174-180",
+          "low_mhz": 174,
+          "high_mhz": 180,
+          "name": "TV channel 7",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 3,
+            "start_mhz": 174.0,
+            "stop_mhz": 225.0
+          }
+        },
+        {
+          "id": "100-200--180-186",
+          "low_mhz": 180,
+          "high_mhz": 186,
+          "name": "TV channel 8",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 3,
+            "start_mhz": 174.0,
+            "stop_mhz": 225.0
+          }
+        },
+        {
+          "id": "100-200--186-192",
+          "low_mhz": 186,
+          "high_mhz": 192,
+          "name": "TV channel 9",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 3,
+            "start_mhz": 174.0,
+            "stop_mhz": 225.0
+          }
+        },
+        {
+          "id": "100-200--192-198",
+          "low_mhz": 192,
+          "high_mhz": 198,
+          "name": "TV channel 10",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 3,
+            "start_mhz": 174.0,
+            "stop_mhz": 225.0
+          }
+        },
+        {
+          "id": "100-200--198-200",
+          "low_mhz": 198,
+          "high_mhz": 200,
+          "name": "TV channel 11 (lower 2 MHz only)",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "Channel 11 is 198–204 MHz; only the part inside this group is shown.",
+          "subband": {
+            "index_in_reference_file": 3,
+            "start_mhz": 174.0,
+            "stop_mhz": 225.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-fed-138-144",
+      "label": "Fed 138–144 MHz",
+      "low_mhz": 138,
+      "high_mhz": 144,
+      "description": "Federal fixed and mobile spectrum, shown in 1 MHz slices.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "fed-138-144--138-139",
+          "low_mhz": 138,
+          "high_mhz": 139,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-138-144--139-140",
+          "low_mhz": 139,
+          "high_mhz": 140,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-138-144--140-141",
+          "low_mhz": 140,
+          "high_mhz": 141,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-138-144--141-142",
+          "low_mhz": 141,
+          "high_mhz": 142,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-138-144--142-143",
+          "low_mhz": 142,
+          "high_mhz": 143,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-138-144--143-144",
+          "low_mhz": 143,
+          "high_mhz": 144,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-fed-162-174",
+      "label": "Fed 162–174 MHz",
+      "low_mhz": 162,
+      "high_mhz": 174,
+      "description": "Federal fixed and mobile spectrum, shown in 1 MHz slices.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "fed-162-174--162-163",
+          "low_mhz": 162,
+          "high_mhz": 163,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "Includes NOAA Weather Radio (162.400–162.550 MHz); 162–162.0375 MHz is maritime (AIS).",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--163-164",
+          "low_mhz": 163,
+          "high_mhz": 164,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--164-165",
+          "low_mhz": 164,
+          "high_mhz": 165,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--165-166",
+          "low_mhz": 165,
+          "high_mhz": 166,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--166-167",
+          "low_mhz": 166,
+          "high_mhz": 167,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--167-168",
+          "low_mhz": 167,
+          "high_mhz": 168,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--168-169",
+          "low_mhz": 168,
+          "high_mhz": 169,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--169-170",
+          "low_mhz": 169,
+          "high_mhz": 170,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--170-171",
+          "low_mhz": 170,
+          "high_mhz": 171,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--171-172",
+          "low_mhz": 171,
+          "high_mhz": 172,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--172-173",
+          "low_mhz": 172,
+          "high_mhz": 173,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        },
+        {
+          "id": "fed-162-174--173-174",
+          "low_mhz": 173,
+          "high_mhz": 174,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "173.2–173.4 MHz is a non-federal allocation.",
+          "subband": {
+            "index_in_reference_file": 2,
+            "start_mhz": 108.0,
+            "stop_mhz": 174.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-400-460",
+      "label": "400–460 MHz",
+      "low_mhz": 400,
+      "high_mhz": 460,
+      "description": "Weather and satellite services, federal spectrum, radar/amateur and UHF land mobile.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "400-460--400-401",
+          "low_mhz": 400,
+          "high_mhz": 401,
+          "name": "Satellite and meteorological services",
+          "services": "STANDARD FREQUENCY AND TIME SIGNAL-SATELLITE, METEOROLOGICAL AIDS, METEOROLOGICAL-SATELLITE, MOBILE-SATELLITE, SPACE RESEARCH",
+          "category": "satellite",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 4,
+            "start_mhz": 225.0,
+            "stop_mhz": 406.0
+          }
+        },
+        {
+          "id": "400-460--401-406",
+          "low_mhz": 401,
+          "high_mhz": 406,
+          "name": "Meteorological aids (radiosondes)",
+          "services": "METEOROLOGICAL AIDS (radiosonde); EARTH EXPLORATION-SATELLITE and METEOROLOGICAL-SATELLITE uplinks in 401–403",
+          "category": "satellite",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 4,
+            "start_mhz": 225.0,
+            "stop_mhz": 406.0
+          }
+        },
+        {
+          "id": "400-460--406-410",
+          "low_mhz": 406,
+          "high_mhz": 410,
+          "name": "Federal fixed and mobile; radio astronomy",
+          "services": "FIXED, MOBILE, RADIO ASTRONOMY",
+          "category": "federal",
+          "note": "406–406.1 MHz is reserved for satellite distress beacons. Shown in 2 MHz slices in the 'Fed 406–420 MHz' group.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--410-420",
+          "low_mhz": 410,
+          "high_mhz": 420,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE, SPACE RESEARCH (space-to-space)",
+          "category": "federal",
+          "note": "Shown in 2 MHz slices in the 'Fed 406–420 MHz' group.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--420-430",
+          "low_mhz": 420,
+          "high_mhz": 430,
+          "name": "Radiolocation (federal radar); amateur 70 cm",
+          "services": "RADIOLOCATION, Amateur",
+          "category": "radiolocation",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--430-440",
+          "low_mhz": 430,
+          "high_mhz": 440,
+          "name": "Radiolocation (federal radar); amateur 70 cm",
+          "services": "RADIOLOCATION, Amateur",
+          "category": "radiolocation",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--440-450",
+          "low_mhz": 440,
+          "high_mhz": 450,
+          "name": "Radiolocation (federal radar); amateur 70 cm",
+          "services": "RADIOLOCATION, Amateur",
+          "category": "radiolocation",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--450-454",
+          "low_mhz": 450,
+          "high_mhz": 454,
+          "name": "UHF land mobile",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--454-456",
+          "low_mhz": 454,
+          "high_mhz": 456,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "400-460--456-460",
+          "low_mhz": 456,
+          "high_mhz": 460,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-fed-406-420",
+      "label": "Fed 406–420 MHz",
+      "low_mhz": 406,
+      "high_mhz": 420,
+      "description": "Federal fixed and mobile spectrum, shown in 2 MHz slices.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "fed-406-420--406-408",
+          "low_mhz": 406,
+          "high_mhz": 408,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "406–406.1 MHz is reserved for satellite distress beacons; 406.1–410 MHz is shared with radio astronomy.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--408-410",
+          "low_mhz": 408,
+          "high_mhz": 410,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "Shared with radio astronomy (406.1–410 MHz).",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--410-412",
+          "low_mhz": 410,
+          "high_mhz": 412,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--412-414",
+          "low_mhz": 412,
+          "high_mhz": 414,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--414-416",
+          "low_mhz": 414,
+          "high_mhz": 416,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--416-418",
+          "low_mhz": 416,
+          "high_mhz": 418,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "fed-406-420--418-420",
+          "low_mhz": 418,
+          "high_mhz": 420,
+          "name": "Federal fixed and mobile",
+          "services": "FIXED, MOBILE",
+          "category": "federal",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-460-463",
+      "label": "460–463 MHz",
+      "low_mhz": 460,
+      "high_mhz": 463,
+      "description": "UHF land mobile, including the GMRS/FRS channels.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "460-463--460-461",
+          "low_mhz": 460,
+          "high_mhz": 461,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "460-463--461-462",
+          "low_mhz": 461,
+          "high_mhz": 462,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "460-463--462-462p5375",
+          "low_mhz": 462,
+          "high_mhz": 462.5375,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "460-463--462p5375-462p7375",
+          "low_mhz": 462.5375,
+          "high_mhz": 462.7375,
+          "name": "GMRS / FRS (personal radio)",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "460-463--462p7375-463",
+          "low_mhz": 462.7375,
+          "high_mhz": 463,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-463-516",
+      "label": "463–516 MHz",
+      "low_mhz": 463,
+      "high_mhz": 516,
+      "description": "UHF land mobile and UHF television channels 14–21.",
+      "source": "FCC Table of Frequency Allocations (47 CFR 2.106), United States Table",
+      "bands": [
+        {
+          "id": "463-516--463-467p5375",
+          "low_mhz": 463,
+          "high_mhz": 467.5375,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--467p5375-467p7375",
+          "low_mhz": 467.5375,
+          "high_mhz": 467.7375,
+          "name": "GMRS / FRS (personal radio)",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--467p7375-470",
+          "low_mhz": 467.7375,
+          "high_mhz": 470,
+          "name": "UHF land mobile",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--470-476",
+          "low_mhz": 470,
+          "high_mhz": 476,
+          "name": "TV channel 14 / land mobile",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "The 470–512 MHz band is shared between TV and land mobile in some large metro areas.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--476-482",
+          "low_mhz": 476,
+          "high_mhz": 482,
+          "name": "TV channel 15 / land mobile",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "The 470–512 MHz band is shared between TV and land mobile in some large metro areas.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--482-488",
+          "low_mhz": 482,
+          "high_mhz": 488,
+          "name": "TV channel 16",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--488-494",
+          "low_mhz": 488,
+          "high_mhz": 494,
+          "name": "TV channel 17",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--494-500",
+          "low_mhz": 494,
+          "high_mhz": 500,
+          "name": "TV channel 18",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--500-506",
+          "low_mhz": 500,
+          "high_mhz": 506,
+          "name": "TV channel 19",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--506-512",
+          "low_mhz": 506,
+          "high_mhz": 512,
+          "name": "TV channel 20",
+          "services": "FIXED, LAND MOBILE, BROADCASTING",
+          "category": "broadcast",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        },
+        {
+          "id": "463-516--512-516",
+          "low_mhz": 512,
+          "high_mhz": 516,
+          "name": "TV channel 21 (lower 4 MHz only)",
+          "services": "BROADCASTING",
+          "category": "broadcast",
+          "note": "Channel 21 is 512–518 MHz; only the part inside this group is shown.",
+          "subband": {
+            "index_in_reference_file": 5,
+            "start_mhz": 406.0,
+            "stop_mhz": 698.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-700-800",
+      "label": "700–800 MHz",
+      "low_mhz": 700,
+      "high_mhz": 800,
+      "description": "700 MHz band: LTE and public safety.",
+      "source": "FCC 700 MHz / 800 MHz band plans and 3GPP LTE band definitions",
+      "bands": [
+        {
+          "id": "700-800--700-717",
+          "low_mhz": 700,
+          "high_mhz": 717,
+          "name": "Lower 700 MHz A/B/C blocks, uplink",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "LTE Bands 12/17 uplink is 699–716 MHz.",
+          "subband": {
+            "index_in_reference_file": 6,
+            "start_mhz": 698.0,
+            "stop_mhz": 760.0
+          }
+        },
+        {
+          "id": "700-800--717-728",
+          "low_mhz": 717,
+          "high_mhz": 728,
+          "name": "LTE Band 29 downlink (Lower 700 MHz D/E blocks)",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "Highlighted as 'B29' in the Wei & Hood RTC 2026 poster.",
+          "subband": {
+            "index_in_reference_file": 6,
+            "start_mhz": 698.0,
+            "stop_mhz": 760.0
+          }
+        },
+        {
+          "id": "700-800--728-746",
+          "low_mhz": 728,
+          "high_mhz": 746,
+          "name": "Lower 700 MHz A/B/C blocks, downlink",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "LTE Bands 12/17 downlink is 729–746 MHz.",
+          "subband": {
+            "index_in_reference_file": 6,
+            "start_mhz": 698.0,
+            "stop_mhz": 760.0
+          }
+        },
+        {
+          "id": "700-800--746-758",
+          "low_mhz": 746,
+          "high_mhz": 758,
+          "name": "Upper 700 MHz C block, downlink",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "LTE Band 13 downlink is 746–756 MHz; 757–758 MHz is a guard band.",
+          "subband": {
+            "index_in_reference_file": 6,
+            "start_mhz": 698.0,
+            "stop_mhz": 760.0
+          }
+        },
+        {
+          "id": "700-800--758-760",
+          "low_mhz": 758,
+          "high_mhz": 760,
+          "name": "LTE Band 14 downlink (FirstNet), part 1 of 2",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "Band 14 downlink is 758–768 MHz ('B14' in the Wei & Hood poster). It is split at 760 MHz because the observatory measured the two parts with different receiver settings.",
+          "subband": {
+            "index_in_reference_file": 6,
+            "start_mhz": 698.0,
+            "stop_mhz": 760.0
+          }
+        },
+        {
+          "id": "700-800--760-768",
+          "low_mhz": 760,
+          "high_mhz": 768,
+          "name": "LTE Band 14 downlink (FirstNet), part 2 of 2",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "Band 14 downlink is 758–768 MHz ('B14' in the Wei & Hood poster). It is split at 760 MHz because the observatory measured the two parts with different receiver settings.",
+          "subband": {
+            "index_in_reference_file": 7,
+            "start_mhz": 760.0,
+            "stop_mhz": 780.0
+          }
+        },
+        {
+          "id": "700-800--768-776",
+          "low_mhz": 768,
+          "high_mhz": 776,
+          "name": "700 MHz public safety narrowband (base) and guard bands",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "Narrowband channels are 769–775 MHz.",
+          "subband": {
+            "index_in_reference_file": 7,
+            "start_mhz": 760.0,
+            "stop_mhz": 780.0
+          }
+        },
+        {
+          "id": "700-800--776-780",
+          "low_mhz": 776,
+          "high_mhz": 780,
+          "name": "Upper 700 MHz C block, uplink, part 1 of 2",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "LTE Band 13 uplink is 777–787 MHz. Split at 780 MHz because of different receiver settings.",
+          "subband": {
+            "index_in_reference_file": 7,
+            "start_mhz": 760.0,
+            "stop_mhz": 780.0
+          }
+        },
+        {
+          "id": "700-800--780-788",
+          "low_mhz": 780,
+          "high_mhz": 788,
+          "name": "Upper 700 MHz C block, uplink, part 2 of 2",
+          "services": "FIXED, MOBILE",
+          "category": "cellular",
+          "note": "LTE Band 13 uplink is 777–787 MHz. Split at 780 MHz because of different receiver settings.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "700-800--788-798",
+          "low_mhz": 788,
+          "high_mhz": 798,
+          "name": "LTE Band 14 uplink (FirstNet)",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "700-800--798-800",
+          "low_mhz": 798,
+          "high_mhz": 800,
+          "name": "700 MHz public safety narrowband (mobile) and guard band",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "Narrowband mobile channels are 799–805 MHz; only the part inside this group is shown.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-800-900",
+      "label": "800–900 MHz",
+      "low_mhz": 800,
+      "high_mhz": 900,
+      "description": "800 MHz band: public safety, land mobile, cellular and air-ground.",
+      "source": "FCC 700 MHz / 800 MHz band plans and 3GPP LTE band definitions",
+      "bands": [
+        {
+          "id": "800-900--800-806",
+          "low_mhz": 800,
+          "high_mhz": 806,
+          "name": "700 MHz public safety narrowband (mobile) and guard band",
+          "services": "FIXED, MOBILE",
+          "category": "public-safety",
+          "note": "Narrowband mobile channels are 799–805 MHz.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--806-824",
+          "low_mhz": 806,
+          "high_mhz": 824,
+          "name": "800 MHz land mobile, mobile transmit",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "Public safety and specialized mobile radio (SMR); paired with 851–869 MHz.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--824-849",
+          "low_mhz": 824,
+          "high_mhz": 849,
+          "name": "Cellular uplink (LTE Band 5)",
+          "services": "FIXED, LAND MOBILE",
+          "category": "cellular",
+          "note": "Paired with 869–894 MHz.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--849-851",
+          "low_mhz": 849,
+          "high_mhz": 851,
+          "name": "Air-ground radiotelephone (ground stations)",
+          "services": "AERONAUTICAL MOBILE",
+          "category": "aeronautical",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--851-869",
+          "low_mhz": 851,
+          "high_mhz": 869,
+          "name": "800 MHz land mobile, base transmit",
+          "services": "LAND MOBILE",
+          "category": "land-mobile",
+          "note": "Public safety and specialized mobile radio (SMR); paired with 806–824 MHz.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--869-894",
+          "low_mhz": 869,
+          "high_mhz": 894,
+          "name": "Cellular downlink (LTE Band 5)",
+          "services": "FIXED, LAND MOBILE",
+          "category": "cellular",
+          "note": "Paired with 824–849 MHz.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--894-896",
+          "low_mhz": 894,
+          "high_mhz": 896,
+          "name": "Air-ground radiotelephone (aircraft)",
+          "services": "AERONAUTICAL MOBILE",
+          "category": "aeronautical",
+          "note": "",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        },
+        {
+          "id": "800-900--896-900",
+          "low_mhz": 896,
+          "high_mhz": 900,
+          "name": "900 MHz land mobile, mobile transmit",
+          "services": "FIXED, LAND MOBILE",
+          "category": "land-mobile",
+          "note": "The allocation is 896–901 MHz; only the part inside this group is shown.",
+          "subband": {
+            "index_in_reference_file": 8,
+            "start_mhz": 780.0,
+            "stop_mhz": 1000.0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -3,11 +3,18 @@ import glob
 import json
 import os
 
-from build_data import DATA_DIR, V2_DIR, load_bands, process_day
+import pytest
+
+from build_data import DATA_DIR, PLAN_DIR, load_bands, process_day
+
+needs_data = pytest.mark.skipif(
+    not DATA_DIR or not os.path.isdir(DATA_DIR),
+    reason="needs the 2018 .h5 files: set IIT_DATA_DIR to their folder")
 
 
+@needs_data
 def test_jan1_matches_reference():
-    ref = json.load(open(os.path.join(V2_DIR, "reference_2018-01-01.json")))
+    ref = json.load(open(os.path.join(PLAN_DIR, "reference_2018-01-01.json")))
     day = process_day(sorted(glob.glob(os.path.join(DATA_DIR, "IITSO_20180101*.h5"))), load_bands())
     assert day["sweeps"] == ref["sweeps_in_file"]
     assert len(ref["bands"]) == 91
