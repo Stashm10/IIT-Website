@@ -69,7 +69,7 @@ def unreadable_html(index):
     if not bad:
         return ""
     files = ", ".join(f"{date} ({', '.join(names)})" for date, names in sorted(bad.items()))
-    return f" Skipped because the source file is damaged and cannot be opened: {escape(files)}."
+    return f" Source files skipped because they are damaged or incomplete: {escape(files)}."
 
 
 def group_html(group, bands):
@@ -134,11 +134,16 @@ def main():
                       status=escape(index["status"]), coverage=coverage_html(index["dates"]),
                       legend=legend, groups=groups_html, unreadable=unreadable_html(index)))
 
+    # Pages are overwritten in place (deleting and recreating the folder makes synced
+    # folders such as iCloud Desktop leave "name 2" copies); stale band pages are removed.
     band_dir = os.path.join(REPO, "band")
-    shutil.rmtree(band_dir, ignore_errors=True)
+    os.makedirs(band_dir, exist_ok=True)
+    for name in os.listdir(band_dir):
+        if name not in bands and os.path.isdir(os.path.join(band_dir, name)):
+            shutil.rmtree(os.path.join(band_dir, name))
     group_of = {i: g for g in index["groups"] for i in g["band_ids"]}
     for band_id, band in bands.items():
-        os.makedirs(os.path.join(band_dir, band_id))
+        os.makedirs(os.path.join(band_dir, band_id), exist_ok=True)
         with open(os.path.join(band_dir, band_id, "index.html"), "w") as fh:
             fh.write(band_page(band, group_of[band_id], header, v))
     print(f"wrote index.html and {len(bands)} band pages")

@@ -43,11 +43,20 @@ def load_bands():
     return bands
 
 
-def files_by_day():
-    days = defaultdict(list)
-    for name in sorted(os.listdir(DATA_DIR)):
+def files_by_day(data_dir=None):
+    """Map 'YYYY-MM-DD' -> source file paths. Several recordings on one date are pooled;
+    duplicate copies of the same recording (e.g. 'name (1).h5') are counted once."""
+    data_dir = data_dir or DATA_DIR
+    recordings = {}
+    for name in sorted(os.listdir(data_dir)):
         if name.startswith("IITSO_") and name.endswith(".h5"):
-            days[day_key(name)].append(os.path.join(DATA_DIR, name))
+            stamp = name[:len("IITSO_YYYYMMDDhhmmss")]
+            # sorted() puts 'name.h5' after 'name (1).h5'; keep the plain name when both exist.
+            if stamp not in recordings or " (" in os.path.basename(recordings[stamp]):
+                recordings[stamp] = os.path.join(data_dir, name)
+    days = defaultdict(list)
+    for stamp in sorted(recordings):
+        days[day_key(stamp)].append(recordings[stamp])
     return dict(sorted(days.items()))
 
 
@@ -58,18 +67,33 @@ def read_subband(f, idx):
     return freqs, ds["powers"][:]
 
 
+def read_file(path, needed):
+    """{sub-band index: (freqs, powers)} for one file; raises if it is unreadable or incomplete."""
+    with h5py.File(path, "r") as f:  # read-only: source data is never altered
+        return {idx: read_subband(f, idx) for idx in needed}
+
+
 def process_day(paths, bands):
-    """Stats for every band over all sweeps of all files belonging to one day."""
+    """Stats for every band over all sweeps of all usable files belonging to one day.
+    Files that cannot be opened or lack a needed sub-band are skipped and reported."""
     needed = sorted({b["subband"]["index_in_reference_file"] for b in bands})
-    freqs, chunks = {}, defaultdict(list)
+    freqs, chunks, used, skipped = {}, defaultdict(list), [], []
     for path in paths:
-        with h5py.File(path, "r") as f:  # read-only: source data is never altered
-            for idx in needed:
-                fr, powers = read_subband(f, idx)
+        name = os.path.basename(path)
+        try:
+            data = read_file(path, needed)
+            for idx, (fr, _) in data.items():
                 if idx in freqs and not np.allclose(freqs[idx], fr):
-                    raise ValueError(f"sub-band {idx} frequency grid differs in {path}")
-                freqs[idx] = fr
-                chunks[idx].append(powers)
+                    raise ValueError(f"sub-band {idx} frequency grid differs")
+        except (OSError, KeyError, ValueError) as exc:
+            skipped.append({"file": name, "reason": f"{type(exc).__name__}: {exc}"})
+            continue
+        for idx, (fr, powers) in data.items():
+            freqs[idx] = fr
+            chunks[idx].append(powers)
+        used.append(name)
+    if not used:
+        raise ValueError(f"no usable file for {day_key(os.path.basename(paths[0]))}: {skipped}")
     powers = {idx: np.concatenate(chunks[idx], axis=0) for idx in needed}
 
     out = {}
@@ -81,8 +105,9 @@ def process_day(paths, bands):
         stats["sweeps"] = int(powers[idx].shape[0])
         out[band["id"]] = stats
     return {
-        "date": day_key(os.path.basename(paths[0])),
-        "files": [os.path.basename(p) for p in paths],
+        "date": day_key(used[0]),
+        "files": used,
+        "skipped": skipped,
         "sweeps": int(powers[needed[0]].shape[0]),
         "bands": out,
     }
@@ -104,6 +129,19 @@ def _work(item):
         json.dump(day, fh, separators=(",", ":"))
     os.replace(tmp, _cache_path(date))
     return date, f"ok {day['sweeps']} sweeps, {time.time() - t0:.0f}s"
+
+
+def unreadable_files(days):
+    done = {d["date"]: d for d in days}
+    out = {}
+    for date, paths in files_by_day().items():
+        if date in done:
+            names = [s["file"] for s in done[date].get("skipped", [])]
+        else:
+            names = [os.path.basename(p) for p in paths]
+        if names:
+            out[date] = names
+    return out
 
 
 def assemble():
@@ -136,10 +174,8 @@ def assemble():
         "bands": {b["id"]: b for b in bands},
         "dates": [d["date"] for d in days],
         "sweeps": {d["date"]: d["sweeps"] for d in days},
-        # Days whose files exist but could not be read (e.g. corrupt HDF5 header).
-        "unreadable": {date: [os.path.basename(p) for p in paths]
-                       for date, paths in files_by_day().items()
-                       if date not in {d["date"] for d in days}},
+        # Source files that exist but could not be used (e.g. corrupt HDF5 header).
+        "unreadable": unreadable_files(days),
     }
     with open(os.path.join(OUT_DIR, "index.json"), "w") as fh:
         json.dump(index, fh, separators=(",", ":"))
@@ -164,7 +200,7 @@ def main():
                 failures += msg.startswith("ERROR")
                 print(f"[{n}/{len(todo)}] {date} {msg}", flush=True)
         if failures:
-            print(f"{failures} day(s) failed; re-run to retry them", file=sys.stderr)
+            print(f"{failures} day(s) failed; re-run to retry them (damaged source files will fail again)", file=sys.stderr)
     if args.only is None:
         assemble()
 

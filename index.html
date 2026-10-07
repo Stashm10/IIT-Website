@@ -3,449 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IIT Spectrum Observatory</title>
-  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #fff;
-      color: #1a1a1a;
-      font-family: Arial, Helvetica, sans-serif;
-      min-height: 100vh;
-    }
-
-    .site-header{
-      --red: #cc0000;
-      --red-dark: #a30000;
-      --hdr-ink: #222;
-      --hdr-bg: #f4f4f4;
-      --h-top: 40px;
-      --h-logo: 96px;
-      --h-nav: 52px;
-
-      position: sticky;
-      top: 0;
-      z-index: 150;
-      background:#fff;
-      font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
-      color: var(--hdr-ink);
-      transition: box-shadow .25s ease;
-    }
-    .site-header.is-scrolled{
-      box-shadow: 0 2px 10px rgba(0,0,0,.15);
-    }
-
-    .site-header .utility-bar{
-      background: var(--hdr-bg);
-      border-bottom: 1px solid #e0e0e0;
-      height: var(--h-top);
-      overflow: hidden;
-      transition: height .25s ease, opacity .2s ease;
-    }
-    .site-header .utility-bar ul{
-      list-style:none; display:flex; gap:20px; height:100%; align-items:center;
-      justify-content:flex-end; padding:0 24px;
-    }
-    .site-header .utility-bar a{
-      color:#444; text-decoration:none; font-size:.78rem; letter-spacing:.02em;
-    }
-    .site-header .utility-bar a:hover{ color: var(--red); text-decoration:underline; }
-    .site-header.is-scrolled .utility-bar{ height:0; opacity:0; border-bottom:none; }
-
-    .site-header .logo-row{
-      height: var(--h-logo);
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 0 24px;
-      transition: height .25s ease;
-    }
-    .site-header.is-scrolled .logo-row{ height:64px; }
-
-    .site-header .logo{
-      display:block; height:48px; transition: height .25s ease;
-    }
-    .site-header .logo svg{ height:100%; width:auto; display:block; }
-    .site-header.is-scrolled .logo{ height:32px; }
-
-    .site-header .logo--red{ display:block; }
-    .site-header .logo--black{ display:none; }
-    .site-header.is-scrolled .logo--red{ display:none; }
-    .site-header.is-scrolled .logo--black{ display:block; }
-
-    .site-header .site-search__toggle{
-      margin-left:auto; background:none; border:none; color:#fff;
-      cursor:pointer; padding:6px; display:flex; align-items:center;
-    }
-    .site-header .search-icon{ width:18px; height:18px; fill:#fff; }
-    .site-header .search-panel{
-      position:absolute; top:100%; right:24px; background:#fff;
-      box-shadow:0 8px 20px rgba(0,0,0,.18); padding:16px; z-index:60;
-      display:flex; gap:8px;
-    }
-    .site-header .search-panel input{
-      border:1px solid #ccc; padding:8px 10px; font-size:.9rem; min-width:220px;
-    }
-    .site-header .search-panel button{
-      background: var(--red); color:#fff; border:none; padding:8px 14px;
-      cursor:pointer; font-size:.85rem; font-weight:600;
-    }
-
-    .site-header .scrolled-actions{ display:none; align-items:center; gap:10px; }
-    .site-header.is-scrolled .scrolled-actions{ display:flex; }
-
-    .site-header .btn-cta{
-      background: var(--red); color:#fff; border:none;
-      padding:10px 16px; font-size:.85rem; font-weight:600;
-      text-decoration:none; cursor:pointer; border-radius:2px;
-    }
-    .site-header .btn-cta:hover{ background: var(--red-dark); }
-
-    .site-header .hamburger{
-      background:none; border:none; cursor:pointer;
-      width:32px; height:24px; position:relative;
-    }
-    .site-header .hamburger span,
-    .site-header .hamburger span::before,
-    .site-header .hamburger span::after{
-      content:""; position:absolute; left:0; width:100%; height:3px;
-      background:#222; transition:.2s;
-    }
-    .site-header .hamburger span{ top:50%; transform:translateY(-50%); }
-    .site-header .hamburger span::before{ top:-9px; }
-    .site-header .hamburger span::after{ top:9px; }
-
-    .site-header .main-nav{
-      background: var(--red);
-      height: var(--h-nav);
-      overflow:hidden;
-      transition: height .25s ease, opacity .2s ease;
-    }
-    .site-header.is-scrolled .main-nav{ height:0; opacity:0; }
-    .site-header .main-nav ul{
-      list-style:none; display:flex; gap:4px; height:100%; align-items:center;
-      padding:0 24px;
-    }
-    .site-header .main-nav li{ position:relative; height:100%; display:flex; align-items:center; }
-
-    .site-header .nav-link, .site-header .nav-trigger{
-      background:none; border:none; color:#fff; font-size:.95rem;
-      font-weight:600; padding:10px 14px; cursor:pointer;
-      text-decoration:none; display:flex; align-items:center; gap:6px;
-      height:100%; font-family: inherit;
-    }
-    .site-header .nav-trigger::after{ content:"▾"; font-size:.7em; }
-    .site-header .nav-link:hover, .site-header .nav-trigger:hover{ background: rgba(255,255,255,.15); }
-
-    .site-header .sr-only, .site-header .show-for-sr{
-      position:absolute; width:1px; height:1px; overflow:hidden;
-      clip:rect(0,0,0,0); white-space:nowrap;
-    }
-
-    .site-header .dropdown-panel{
-      position:absolute; top:100%; left:0; background:#fff;
-      color:#222; min-width:220px; box-shadow:0 8px 20px rgba(0,0,0,.18);
-      padding:12px 0; display:none; z-index:50;
-    }
-    .site-header .dropdown-panel.open{ display:block; }
-    .site-header .dropdown-panel a{
-      display:block; padding:8px 18px; color:#222; text-decoration:none; font-size:.9rem;
-    }
-    .site-header .dropdown-panel a:hover{ background: var(--hdr-bg); color: var(--red); }
-
-    .site-header .mobile-menu{
-      display:none; position:absolute; top:100%; right:0; background:#fff;
-      box-shadow:0 8px 20px rgba(0,0,0,.18); width:260px; padding:10px 0;
-    }
-    .site-header .mobile-menu.open{ display:block; }
-    .site-header .mobile-menu a{ display:block; padding:10px 18px; color:#222; text-decoration:none; font-size:.92rem; }
-    .site-header .mobile-menu a:hover{ background:var(--hdr-bg); color:var(--red); }
-
-    @media (prefers-reduced-motion: reduce){
-      .site-header, .site-header .utility-bar, .site-header .logo-row,
-      .site-header .logo, .site-header .main-nav{ transition:none !important; }
-    }
-
-    .page-banner {
-      background: #fff;
-      border-bottom: 3px solid #CC0000;
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-    .iit-badge {
-      background: #CC0000;
-      color: #fff;
-      font-weight: 900;
-      font-size: 1.1rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 3px;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-    }
-    .header-text h1 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #1a1a1a;
-      line-height: 1.2;
-    }
-    .header-text .subtitle {
-      font-size: 0.8rem;
-      color: #555;
-      margin-top: 2px;
-      letter-spacing: 0.02em;
-    }
-
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 1.5rem 1.5rem 4rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .section-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #555;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .intro {
-      font-size: 0.85rem;
-      color: #000;
-      line-height: 1.6;
-      max-width: 780px;
-    }
-
-    :root {
-      --ink: #171717;
-      --line: #1c1c1c;
-      --mobile: #e8cfdf;
-      --fixed: #d4147f;
-      --land-mobile: #0d9ca2;
-      --amateur: #07906b;
-      --radio-astronomy: #fff200;
-      --base-red: #df334d;
-      --base-green: #12a779;
-      --black: #1b1b1b;
-    }
-
-    .chart-shell {
-      overflow-x: auto;
-      padding: 18px 36px 8px;
-    }
-
-    .chart {
-      min-width: 1180px;
-      position: relative;
-      padding-top: 76px;
-    }
-
-    .ticks {
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 76px;
-      border-bottom: 4px solid var(--line);
-      pointer-events: none;
-    }
-
-    .tick {
-      position: absolute;
-      bottom: 18px;
-      transform: translateX(-50%) rotate(-90deg);
-      transform-origin: center;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .grid {
-      display: flex;
-      height: 365px;
-      border: 4px solid var(--line);
-      border-top: 0;
-      background: #fff;
-    }
-
-    .column {
-      appearance: none;
-      display: grid;
-      grid-template-rows: 44% 50% 6%;
-      min-width: 22px;
-      padding: 0;
-      border: 0;
-      border-right: 1px solid rgba(0,0,0,.7);
-      background: transparent;
-      cursor: pointer;
-      color: var(--ink);
-      transition: filter .12s ease, transform .12s ease;
-    }
-
-    .column:last-child { border-right: 0; }
-
-    .column:hover {
-      filter: brightness(1.07) saturate(1.08);
-    }
-
-    .column:focus-visible {
-      outline: 4px solid #000;
-      outline-offset: -8px;
-      z-index: 3;
-    }
-
-    .cell {
-      position: relative;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      border-bottom: 1px solid rgba(0,0,0,.55);
-    }
-
-    .cell:last-child { border-bottom: 0; }
-
-    .bg-mobile { background: var(--mobile); }
-    .bg-fixed { background: var(--fixed); }
-    .bg-land-mobile { background: var(--land-mobile); }
-    .bg-amateur { background: var(--amateur); }
-    .bg-radio-astronomy { background: var(--radio-astronomy); }
-    .bg-base-red { background: var(--base-red); }
-    .bg-base-green { background: var(--base-green); }
-    .bg-black { background: var(--black); color: #fff; }
-
-    .chart-label {
-      display: block;
-      max-width: 320px;
-      font-size: clamp(12px, 1.15vw, 18px);
-      line-height: 1;
-      text-align: center;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .chart-label.vertical {
-      transform: rotate(-90deg);
-      transform-origin: center;
-    }
-
-    .chart-label.small { font-size: 13px; }
-    .chart-label.tiny { font-size: 11px; }
-    .chart-label.micro { font-size: 9px; }
-    .chart-label.normal { text-transform: none; }
-
-    .column[data-center="true"] .cell {
-      justify-items: center;
-      align-items: center;
-    }
-
-    .column[data-center="true"] .chart-label.vertical {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(-90deg);
-    }
-
-    .below {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: start;
-      gap: 20px;
-      min-width: 1180px;
-      padding-top: 16px;
-      font-family: Georgia, "Times New Roman", serif;
-    }
-
-    .mhz {
-      font-size: 44px;
-      line-height: 1;
-    }
-
-    .ism {
-      align-self: center;
-      font-size: 23px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      white-space: nowrap;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 1.25rem 1.5rem;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.75rem;
-    }
-    .stat-item {
-      background: #f8f8f8;
-      border: 1px solid #e0e0e0;
-      border-radius: 3px;
-      padding: 0.75rem 1rem;
-    }
-    .stat-label {
-      font-size: 0.65rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 0.25rem;
-    }
-    .stat-value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-    .stat-unit { font-size: 0.7rem; color: #666; margin-left: 2px; }
-    .stat-note { font-size: 0.65rem; color: #777; margin-top: 0.25rem; line-height: 1.4; }
-
-    #loading-overlay {
-      position: fixed; inset: 0;
-      background: rgba(255,255,255,0.9);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 200; gap: 1rem;
-      transition: opacity 0.3s;
-    }
-    #loading-overlay.hidden { opacity: 0; pointer-events: none; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid #ddd;
-      border-top-color: #CC0000;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loading-overlay p { font-size: 0.85rem; color: #666; }
-
-    .caption {
-      font-size: 0.75rem;
-      color: #666;
-      line-height: 1.5;
-      margin-top: 0.75rem;
-    }
-
-    @media (max-width: 640px) {
-      .page-banner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-      .card { padding: 1rem; }
-    }
-  </style>
+  <title>IIT Spectrum Observatory — 2018 Band Histograms</title>
+  <link rel="stylesheet" href="assets/header.css?v=c73a06961d" />
+  <link rel="stylesheet" href="assets/site.css?v=c73a06961d" />
 </head>
 <body>
-
-<div id="loading-overlay">
-  <div class="spinner"></div>
-  <p>Loading spectrum data…</p>
-</div>
-
 <header class="site-header" id="siteHeader">
 
   <div class="utility-bar">
@@ -567,357 +129,102 @@
 <div class="page-banner">
   <span class="iit-badge">IIT</span>
   <div class="header-text">
-    <h1>Spectrum Observatory — 30–54 MHz</h1>
-    <div class="subtitle">Illinois Institute of Technology &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; January 1, 2018</div>
+    <h1>Spectrum Observatory — 44–900 MHz</h1>
+    <div class="subtitle">Illinois Institute of Technology &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; 299 observed days in 2018</div>
   </div>
 </div>
-
 <main>
-
   <p class="intro">
     Real radio frequency spectrum measurements collected by the IIT Spectrum Observatory,
-    located on the rooftop of IIT Tower at 10 W. 35th Street, Chicago. Click any allocation
-    segment below to explore its power distribution, spectrogram, and data matrix.
+    located on the rooftop of IIT Tower at 10 W. 35th Street, Chicago. The spectrum is split into
+    the analysis groups used in Wei &amp; Hood (IEEE RTC 2026). Click any band to see its power
+    distribution for every observed day of 2018, pooled by month or for the whole year.
   </p>
+  <p class="draft-note"><strong>Draft band plan.</strong> DRAFT - group list taken from the Wei &amp; Hood IEEE RTC 2026 poster; the breakdown inside each group is a proposal and must be confirmed with the professor / PhD student before publication.</p>
+
+  <div class="card">
+    <div class="section-title">Days with data — 2018</div>
+    <div class="coverage"><div class="cov-month"><b>January</b><div class="cov-days"><span class="cov-day on" title="Jan 1"></span><span class="cov-day on" title="Jan 2"></span><span class="cov-day on" title="Jan 3"></span><span class="cov-day on" title="Jan 4"></span><span class="cov-day on" title="Jan 5"></span><span class="cov-day on" title="Jan 6"></span><span class="cov-day on" title="Jan 7"></span><span class="cov-day on" title="Jan 8"></span><span class="cov-day on" title="Jan 9"></span><span class="cov-day on" title="Jan 10"></span><span class="cov-day on" title="Jan 11"></span><span class="cov-day on" title="Jan 12"></span><span class="cov-day on" title="Jan 13"></span><span class="cov-day on" title="Jan 14"></span><span class="cov-day on" title="Jan 15"></span><span class="cov-day on" title="Jan 16"></span><span class="cov-day on" title="Jan 17"></span><span class="cov-day on" title="Jan 18"></span><span class="cov-day on" title="Jan 19"></span><span class="cov-day on" title="Jan 20"></span><span class="cov-day on" title="Jan 21"></span><span class="cov-day on" title="Jan 22"></span><span class="cov-day on" title="Jan 23"></span><span class="cov-day on" title="Jan 24"></span><span class="cov-day on" title="Jan 25"></span><span class="cov-day on" title="Jan 26"></span><span class="cov-day on" title="Jan 27"></span><span class="cov-day on" title="Jan 28"></span><span class="cov-day on" title="Jan 29"></span><span class="cov-day on" title="Jan 30"></span><span class="cov-day on" title="Jan 31"></span></div>31 of 31 days</div>
+<div class="cov-month"><b>February</b><div class="cov-days"><span class="cov-day on" title="Feb 1"></span><span class="cov-day on" title="Feb 2"></span><span class="cov-day on" title="Feb 3"></span><span class="cov-day on" title="Feb 4"></span><span class="cov-day on" title="Feb 5"></span><span class="cov-day on" title="Feb 6"></span><span class="cov-day on" title="Feb 7"></span><span class="cov-day on" title="Feb 8"></span><span class="cov-day on" title="Feb 9"></span><span class="cov-day on" title="Feb 10"></span><span class="cov-day on" title="Feb 11"></span><span class="cov-day on" title="Feb 12"></span><span class="cov-day on" title="Feb 13"></span><span class="cov-day on" title="Feb 14"></span><span class="cov-day" title="Feb 15"></span><span class="cov-day" title="Feb 16"></span><span class="cov-day" title="Feb 17"></span><span class="cov-day" title="Feb 18"></span><span class="cov-day" title="Feb 19"></span><span class="cov-day" title="Feb 20"></span><span class="cov-day" title="Feb 21"></span><span class="cov-day" title="Feb 22"></span><span class="cov-day" title="Feb 23"></span><span class="cov-day" title="Feb 24"></span><span class="cov-day" title="Feb 25"></span><span class="cov-day" title="Feb 26"></span><span class="cov-day" title="Feb 27"></span><span class="cov-day" title="Feb 28"></span></div>14 of 28 days</div>
+<div class="cov-month"><b>March</b><div class="cov-days"><span class="cov-day" title="Mar 1"></span><span class="cov-day" title="Mar 2"></span><span class="cov-day" title="Mar 3"></span><span class="cov-day" title="Mar 4"></span><span class="cov-day" title="Mar 5"></span><span class="cov-day" title="Mar 6"></span><span class="cov-day" title="Mar 7"></span><span class="cov-day" title="Mar 8"></span><span class="cov-day" title="Mar 9"></span><span class="cov-day" title="Mar 10"></span><span class="cov-day" title="Mar 11"></span><span class="cov-day on" title="Mar 12"></span><span class="cov-day on" title="Mar 13"></span><span class="cov-day on" title="Mar 14"></span><span class="cov-day on" title="Mar 15"></span><span class="cov-day on" title="Mar 16"></span><span class="cov-day on" title="Mar 17"></span><span class="cov-day on" title="Mar 18"></span><span class="cov-day on" title="Mar 19"></span><span class="cov-day on" title="Mar 20"></span><span class="cov-day on" title="Mar 21"></span><span class="cov-day on" title="Mar 22"></span><span class="cov-day on" title="Mar 23"></span><span class="cov-day on" title="Mar 24"></span><span class="cov-day on" title="Mar 25"></span><span class="cov-day on" title="Mar 26"></span><span class="cov-day on" title="Mar 27"></span><span class="cov-day on" title="Mar 28"></span><span class="cov-day on" title="Mar 29"></span><span class="cov-day on" title="Mar 30"></span><span class="cov-day on" title="Mar 31"></span></div>20 of 31 days</div>
+<div class="cov-month"><b>April</b><div class="cov-days"><span class="cov-day on" title="Apr 1"></span><span class="cov-day on" title="Apr 2"></span><span class="cov-day on" title="Apr 3"></span><span class="cov-day on" title="Apr 4"></span><span class="cov-day on" title="Apr 5"></span><span class="cov-day on" title="Apr 6"></span><span class="cov-day on" title="Apr 7"></span><span class="cov-day on" title="Apr 8"></span><span class="cov-day on" title="Apr 9"></span><span class="cov-day on" title="Apr 10"></span><span class="cov-day on" title="Apr 11"></span><span class="cov-day on" title="Apr 12"></span><span class="cov-day on" title="Apr 13"></span><span class="cov-day on" title="Apr 14"></span><span class="cov-day on" title="Apr 15"></span><span class="cov-day on" title="Apr 16"></span><span class="cov-day on" title="Apr 17"></span><span class="cov-day on" title="Apr 18"></span><span class="cov-day on" title="Apr 19"></span><span class="cov-day on" title="Apr 20"></span><span class="cov-day on" title="Apr 21"></span><span class="cov-day on" title="Apr 22"></span><span class="cov-day on" title="Apr 23"></span><span class="cov-day on" title="Apr 24"></span><span class="cov-day on" title="Apr 25"></span><span class="cov-day on" title="Apr 26"></span><span class="cov-day on" title="Apr 27"></span><span class="cov-day on" title="Apr 28"></span><span class="cov-day on" title="Apr 29"></span><span class="cov-day on" title="Apr 30"></span></div>30 of 30 days</div>
+<div class="cov-month"><b>May</b><div class="cov-days"><span class="cov-day on" title="May 1"></span><span class="cov-day on" title="May 2"></span><span class="cov-day on" title="May 3"></span><span class="cov-day on" title="May 4"></span><span class="cov-day on" title="May 5"></span><span class="cov-day on" title="May 6"></span><span class="cov-day on" title="May 7"></span><span class="cov-day" title="May 8"></span><span class="cov-day" title="May 9"></span><span class="cov-day" title="May 10"></span><span class="cov-day" title="May 11"></span><span class="cov-day" title="May 12"></span><span class="cov-day" title="May 13"></span><span class="cov-day" title="May 14"></span><span class="cov-day" title="May 15"></span><span class="cov-day" title="May 16"></span><span class="cov-day" title="May 17"></span><span class="cov-day" title="May 18"></span><span class="cov-day" title="May 19"></span><span class="cov-day" title="May 20"></span><span class="cov-day on" title="May 21"></span><span class="cov-day on" title="May 22"></span><span class="cov-day on" title="May 23"></span><span class="cov-day on" title="May 24"></span><span class="cov-day on" title="May 25"></span><span class="cov-day on" title="May 26"></span><span class="cov-day on" title="May 27"></span><span class="cov-day on" title="May 28"></span><span class="cov-day on" title="May 29"></span><span class="cov-day on" title="May 30"></span><span class="cov-day on" title="May 31"></span></div>18 of 31 days</div>
+<div class="cov-month"><b>June</b><div class="cov-days"><span class="cov-day on" title="Jun 1"></span><span class="cov-day on" title="Jun 2"></span><span class="cov-day on" title="Jun 3"></span><span class="cov-day on" title="Jun 4"></span><span class="cov-day on" title="Jun 5"></span><span class="cov-day on" title="Jun 6"></span><span class="cov-day on" title="Jun 7"></span><span class="cov-day on" title="Jun 8"></span><span class="cov-day on" title="Jun 9"></span><span class="cov-day on" title="Jun 10"></span><span class="cov-day on" title="Jun 11"></span><span class="cov-day on" title="Jun 12"></span><span class="cov-day on" title="Jun 13"></span><span class="cov-day on" title="Jun 14"></span><span class="cov-day on" title="Jun 15"></span><span class="cov-day on" title="Jun 16"></span><span class="cov-day on" title="Jun 17"></span><span class="cov-day on" title="Jun 18"></span><span class="cov-day on" title="Jun 19"></span><span class="cov-day on" title="Jun 20"></span><span class="cov-day on" title="Jun 21"></span><span class="cov-day on" title="Jun 22"></span><span class="cov-day on" title="Jun 23"></span><span class="cov-day on" title="Jun 24"></span><span class="cov-day on" title="Jun 25"></span><span class="cov-day on" title="Jun 26"></span><span class="cov-day on" title="Jun 27"></span><span class="cov-day on" title="Jun 28"></span><span class="cov-day on" title="Jun 29"></span><span class="cov-day on" title="Jun 30"></span></div>30 of 30 days</div>
+<div class="cov-month"><b>July</b><div class="cov-days"><span class="cov-day on" title="Jul 1"></span><span class="cov-day on" title="Jul 2"></span><span class="cov-day on" title="Jul 3"></span><span class="cov-day on" title="Jul 4"></span><span class="cov-day on" title="Jul 5"></span><span class="cov-day on" title="Jul 6"></span><span class="cov-day on" title="Jul 7"></span><span class="cov-day on" title="Jul 8"></span><span class="cov-day" title="Jul 9"></span><span class="cov-day" title="Jul 10"></span><span class="cov-day" title="Jul 11"></span><span class="cov-day" title="Jul 12"></span><span class="cov-day" title="Jul 13"></span><span class="cov-day" title="Jul 14"></span><span class="cov-day on" title="Jul 15"></span><span class="cov-day on" title="Jul 16"></span><span class="cov-day on" title="Jul 17"></span><span class="cov-day on" title="Jul 18"></span><span class="cov-day on" title="Jul 19"></span><span class="cov-day" title="Jul 20"></span><span class="cov-day" title="Jul 21"></span><span class="cov-day on" title="Jul 22"></span><span class="cov-day on" title="Jul 23"></span><span class="cov-day on" title="Jul 24"></span><span class="cov-day on" title="Jul 25"></span><span class="cov-day on" title="Jul 26"></span><span class="cov-day on" title="Jul 27"></span><span class="cov-day on" title="Jul 28"></span><span class="cov-day on" title="Jul 29"></span><span class="cov-day on" title="Jul 30"></span><span class="cov-day on" title="Jul 31"></span></div>23 of 31 days</div>
+<div class="cov-month"><b>August</b><div class="cov-days"><span class="cov-day on" title="Aug 1"></span><span class="cov-day on" title="Aug 2"></span><span class="cov-day on" title="Aug 3"></span><span class="cov-day on" title="Aug 4"></span><span class="cov-day on" title="Aug 5"></span><span class="cov-day on" title="Aug 6"></span><span class="cov-day on" title="Aug 7"></span><span class="cov-day on" title="Aug 8"></span><span class="cov-day on" title="Aug 9"></span><span class="cov-day on" title="Aug 10"></span><span class="cov-day on" title="Aug 11"></span><span class="cov-day on" title="Aug 12"></span><span class="cov-day on" title="Aug 13"></span><span class="cov-day" title="Aug 14"></span><span class="cov-day" title="Aug 15"></span><span class="cov-day" title="Aug 16"></span><span class="cov-day" title="Aug 17"></span><span class="cov-day" title="Aug 18"></span><span class="cov-day" title="Aug 19"></span><span class="cov-day" title="Aug 20"></span><span class="cov-day on" title="Aug 21"></span><span class="cov-day on" title="Aug 22"></span><span class="cov-day on" title="Aug 23"></span><span class="cov-day on" title="Aug 24"></span><span class="cov-day on" title="Aug 25"></span><span class="cov-day on" title="Aug 26"></span><span class="cov-day on" title="Aug 27"></span><span class="cov-day on" title="Aug 28"></span><span class="cov-day on" title="Aug 29"></span><span class="cov-day on" title="Aug 30"></span><span class="cov-day on" title="Aug 31"></span></div>24 of 31 days</div>
+<div class="cov-month"><b>September</b><div class="cov-days"><span class="cov-day on" title="Sep 1"></span><span class="cov-day on" title="Sep 2"></span><span class="cov-day on" title="Sep 3"></span><span class="cov-day on" title="Sep 4"></span><span class="cov-day on" title="Sep 5"></span><span class="cov-day on" title="Sep 6"></span><span class="cov-day on" title="Sep 7"></span><span class="cov-day on" title="Sep 8"></span><span class="cov-day on" title="Sep 9"></span><span class="cov-day on" title="Sep 10"></span><span class="cov-day on" title="Sep 11"></span><span class="cov-day on" title="Sep 12"></span><span class="cov-day on" title="Sep 13"></span><span class="cov-day on" title="Sep 14"></span><span class="cov-day on" title="Sep 15"></span><span class="cov-day on" title="Sep 16"></span><span class="cov-day on" title="Sep 17"></span><span class="cov-day on" title="Sep 18"></span><span class="cov-day on" title="Sep 19"></span><span class="cov-day on" title="Sep 20"></span><span class="cov-day on" title="Sep 21"></span><span class="cov-day on" title="Sep 22"></span><span class="cov-day on" title="Sep 23"></span><span class="cov-day on" title="Sep 24"></span><span class="cov-day on" title="Sep 25"></span><span class="cov-day on" title="Sep 26"></span><span class="cov-day on" title="Sep 27"></span><span class="cov-day on" title="Sep 28"></span><span class="cov-day on" title="Sep 29"></span><span class="cov-day on" title="Sep 30"></span></div>30 of 30 days</div>
+<div class="cov-month"><b>October</b><div class="cov-days"><span class="cov-day on" title="Oct 1"></span><span class="cov-day on" title="Oct 2"></span><span class="cov-day on" title="Oct 3"></span><span class="cov-day on" title="Oct 4"></span><span class="cov-day on" title="Oct 5"></span><span class="cov-day on" title="Oct 6"></span><span class="cov-day on" title="Oct 7"></span><span class="cov-day on" title="Oct 8"></span><span class="cov-day" title="Oct 9"></span><span class="cov-day on" title="Oct 10"></span><span class="cov-day on" title="Oct 11"></span><span class="cov-day on" title="Oct 12"></span><span class="cov-day on" title="Oct 13"></span><span class="cov-day on" title="Oct 14"></span><span class="cov-day on" title="Oct 15"></span><span class="cov-day on" title="Oct 16"></span><span class="cov-day on" title="Oct 17"></span><span class="cov-day on" title="Oct 18"></span><span class="cov-day on" title="Oct 19"></span><span class="cov-day on" title="Oct 20"></span><span class="cov-day on" title="Oct 21"></span><span class="cov-day on" title="Oct 22"></span><span class="cov-day on" title="Oct 23"></span><span class="cov-day on" title="Oct 24"></span><span class="cov-day on" title="Oct 25"></span><span class="cov-day on" title="Oct 26"></span><span class="cov-day on" title="Oct 27"></span><span class="cov-day on" title="Oct 28"></span><span class="cov-day on" title="Oct 29"></span><span class="cov-day on" title="Oct 30"></span><span class="cov-day on" title="Oct 31"></span></div>30 of 31 days</div>
+<div class="cov-month"><b>November</b><div class="cov-days"><span class="cov-day on" title="Nov 1"></span><span class="cov-day on" title="Nov 2"></span><span class="cov-day on" title="Nov 3"></span><span class="cov-day on" title="Nov 4"></span><span class="cov-day on" title="Nov 5"></span><span class="cov-day on" title="Nov 6"></span><span class="cov-day on" title="Nov 7"></span><span class="cov-day on" title="Nov 8"></span><span class="cov-day on" title="Nov 9"></span><span class="cov-day on" title="Nov 10"></span><span class="cov-day on" title="Nov 11"></span><span class="cov-day on" title="Nov 12"></span><span class="cov-day" title="Nov 13"></span><span class="cov-day" title="Nov 14"></span><span class="cov-day" title="Nov 15"></span><span class="cov-day" title="Nov 16"></span><span class="cov-day" title="Nov 17"></span><span class="cov-day" title="Nov 18"></span><span class="cov-day on" title="Nov 19"></span><span class="cov-day on" title="Nov 20"></span><span class="cov-day on" title="Nov 21"></span><span class="cov-day on" title="Nov 22"></span><span class="cov-day on" title="Nov 23"></span><span class="cov-day on" title="Nov 24"></span><span class="cov-day on" title="Nov 25"></span><span class="cov-day on" title="Nov 26"></span><span class="cov-day on" title="Nov 27"></span><span class="cov-day on" title="Nov 28"></span><span class="cov-day on" title="Nov 29"></span><span class="cov-day on" title="Nov 30"></span></div>24 of 30 days</div>
+<div class="cov-month"><b>December</b><div class="cov-days"><span class="cov-day on" title="Dec 1"></span><span class="cov-day on" title="Dec 2"></span><span class="cov-day on" title="Dec 3"></span><span class="cov-day on" title="Dec 4"></span><span class="cov-day on" title="Dec 5"></span><span class="cov-day on" title="Dec 6"></span><span class="cov-day on" title="Dec 7"></span><span class="cov-day on" title="Dec 8"></span><span class="cov-day on" title="Dec 9"></span><span class="cov-day on" title="Dec 10"></span><span class="cov-day on" title="Dec 11"></span><span class="cov-day" title="Dec 12"></span><span class="cov-day" title="Dec 13"></span><span class="cov-day on" title="Dec 14"></span><span class="cov-day on" title="Dec 15"></span><span class="cov-day on" title="Dec 16"></span><span class="cov-day on" title="Dec 17"></span><span class="cov-day on" title="Dec 18"></span><span class="cov-day on" title="Dec 19"></span><span class="cov-day" title="Dec 20"></span><span class="cov-day" title="Dec 21"></span><span class="cov-day" title="Dec 22"></span><span class="cov-day on" title="Dec 23"></span><span class="cov-day on" title="Dec 24"></span><span class="cov-day on" title="Dec 25"></span><span class="cov-day on" title="Dec 26"></span><span class="cov-day on" title="Dec 27"></span><span class="cov-day on" title="Dec 28"></span><span class="cov-day on" title="Dec 29"></span><span class="cov-day on" title="Dec 30"></span><span class="cov-day" title="Dec 31"></span></div>25 of 31 days</div></div>
+    <p class="caption">Each square is one day; red days have a usable measurement file (299 of 365). Source files skipped because they are damaged or incomplete: 2018-02-15 (IITSO_20180215000800_(30-6000_MHz).h5), 2018-03-11 (IITSO_20180311111528_(30-6000_MHz).h5), 2018-04-14 (IITSO_20180414000502_(30-6000_MHz).h5), 2018-05-08 (IITSO_20180508000805_(30-6000_MHz).h5), 2018-06-13 (IITSO_20180613000211_(30-6000_MHz).h5), 2018-06-14 (IITSO_20180614130626_(30-6000_MHz).h5), 2018-07-20 (IITSO_20180720000421_(30-6000_MHz).h5), 2018-08-14 (IITSO_20180814000538_(30-6000_MHz).h5), 2018-08-21 (IITSO_20180821133309_(30-6000_MHz).h5), 2018-09-13 (IITSO_20180913000238_(30-6000_MHz).h5), 2018-10-09 (IITSO_20181009000502_(30-6000_MHz).h5), 2018-11-13 (IITSO_20181113000935_(30-6000_MHz).h5), 2018-12-12 (IITSO_20181212000023_(30-6000_MHz).h5), 2018-12-20 (IITSO_20181220000409_(30-6000_MHz).h5).</p>
+  </div>
 
   <div>
-    <div class="section-title">Frequency Allocation — 30 to 54 MHz (NTIA)</div>
-    <section class="chart-shell" aria-label="30 to 54 MHz frequency allocation chart">
-      <div class="chart">
-        <div class="ticks" aria-hidden="true">
-          <span class="tick" style="left: 0%">30.0</span>
-          <span class="tick" style="left: 2.333%">30.56</span>
-          <span class="tick" style="left: 8.333%">32.0</span>
-          <span class="tick" style="left: 12.5%">33.0</span>
-          <span class="tick" style="left: 16.667%">34.0</span>
-          <span class="tick" style="left: 20.833%">35.0</span>
-          <span class="tick" style="left: 25%">36.0</span>
-          <span class="tick" style="left: 29.167%">37.0</span>
-          <span class="tick" style="left: 31.25%">37.5</span>
-          <span class="tick" style="left: 33.333%">38.0</span>
-          <span class="tick" style="left: 34.375%">38.25</span>
-          <span class="tick" style="left: 37.5%">39.0</span>
-          <span class="tick" style="left: 41.667%">40.0</span>
-          <span class="tick" style="left: 50%">42.0</span>
-          <span class="tick" style="left: 57.042%">43.69</span>
-          <span class="tick" style="left: 69.167%">46.6</span>
-          <span class="tick" style="left: 70.833%">47.0</span>
-          <span class="tick" style="left: 81.667%">49.6</span>
-          <span class="tick" style="left: 83.333%">50.0</span>
-          <span class="tick" style="left: 100%">54.0</span>
-        </div>
-
-        <div class="grid">
-          <button class="column" data-center="true" style="flex: 0.56" onclick="window.location.href='square/mobile_30.0_30.56/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 1.44" onclick="window.location.href='square/land_mobile_30.56_32.0/'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical">Land Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 1" onclick="window.location.href='square/mobile_32.0_33.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: 1" onclick="window.location.href='square/land_mobile_33.0_34.0/'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical">Land Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 1" onclick="window.location.href='square/mobile_34.0_35.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: 1" onclick="window.location.href='square/land_mobile_35.0_36.0/'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical">Land Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 1" onclick="window.location.href='square/mobile_36.0_37.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .5" onclick="window.location.href='square/land_mobile_fixed_37.0_37.5/'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical small">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .5" onclick="window.location.href='square/fixed_37.5_38.0/'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical small">Land Mobile</span></span>
-            <span class="cell bg-radio-astronomy"><span class="chart-label vertical small normal">Radio astronomy</span></span>
-            <span class="cell bg-black"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .25; grid-template-rows: 28% 25% 47%;" onclick="window.location.href='square/radio_astronomy_38.0_38.25/'">
-            <span class="cell bg-fixed"><span class="chart-label vertical tiny">Fixed</span></span>
-            <span class="cell bg-mobile"><span class="chart-label vertical tiny">Mobile</span></span>
-            <span class="cell bg-radio-astronomy"><span class="chart-label vertical micro">RADIO ASTRONOMY</span></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .75" onclick="window.location.href='square/land_mobile_38.25_39.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: 1" onclick="window.location.href='square/land_mobile_39.0_40.0/'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 2" onclick="window.location.href='square/mobile_40.0_42.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 1.69" onclick="window.location.href='square/land_mobile_42.0_43.69/'">
-            <span class="cell bg-land-mobile"><span class="chart-label vertical">Land Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical">Fixed</span></span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" style="flex: 2.91" onclick="window.location.href='square/mobile_43.69_46.6/'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .4" onclick="window.location.href='square/land_mobile_46.6_47.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical small">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical small">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 2.6" onclick="window.location.href='square/mobile_47.0_49.6/'">
-            <span class="cell bg-land-mobile" style="grid-row: 1 / 3;">
-              <span class="chart-label vertical">Land Mobile</span>
-            </span>
-            <span class="cell bg-base-green"></span>
-          </button>
-
-          <button class="column" data-center="true" style="flex: .4" onclick="window.location.href='square/mobile_49.6_50.0/'">
-            <span class="cell bg-mobile"><span class="chart-label vertical small">Mobile</span></span>
-            <span class="cell bg-fixed"><span class="chart-label vertical small">Fixed</span></span>
-            <span class="cell bg-base-red"></span>
-          </button>
-
-          <button class="column" style="flex: 4" onclick="window.location.href='square/amateur_50.0_54.0/'">
-            <span class="cell bg-amateur" style="grid-row: 1 / 4;">
-              <span class="chart-label normal" style="font-size: 20px;">Amateur</span>
-            </span>
-          </button>
-        </div>
-
-        <div class="below">
-          <div class="mhz">30 MHz</div>
-          <div class="ism">ISM - 40.68 <small>+-.02 MHz</small></div>
-          <div></div>
-        </div>
-      </div>
-    </section>
+    <div class="section-title">Service categories</div>
+    <div class="legend"><span class="cat-broadcast"><span class="cat-dot"></span>Broadcast</span><span class="cat-aeronautical"><span class="cat-dot"></span>Aeronautical</span><span class="cat-satellite"><span class="cat-dot"></span>Satellite</span><span class="cat-federal"><span class="cat-dot"></span>Federal</span><span class="cat-amateur"><span class="cat-dot"></span>Amateur</span><span class="cat-land-mobile"><span class="cat-dot"></span>Land mobile</span><span class="cat-maritime"><span class="cat-dot"></span>Maritime</span><span class="cat-radiolocation"><span class="cat-dot"></span>Radiolocation</span><span class="cat-cellular"><span class="cat-dot"></span>Cellular</span><span class="cat-public-safety"><span class="cat-dot"></span>Public safety</span></div>
   </div>
 
-  <div class="card">
-    <div class="section-title">Power Distribution — Full Band (30–54 MHz)</div>
-    <div id="histogram"></div>
-    <p class="caption">
-      Distribution of all ~984,000 power readings across the full 30–54 MHz band.
-      Click any allocation segment above to see its specific distribution.
-    </p>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Spectrogram — Power vs. Time and Frequency</div>
-    <div id="heatmap"></div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Summary Statistics — Full Band</div>
-    <div class="stats-grid" id="stats-grid"></div>
-  </div>
-
+  <section class="card group" id="g-44-48">
+    <div class="group-head"><h2>44–48 MHz</h2><p>VHF low band: land mobile and federal fixed/mobile.</p></div>
+    <div class="band-bar"><a class="band-seg cat-land-mobile" style="flex-grow:0.6500" href="band/44-48--44-46p6/" title="Land mobile (VHF low band) — 44–46.6 MHz" aria-label="Land mobile (VHF low band) — 44–46.6 MHz">44–46.6</a><a class="band-seg cat-federal" style="flex-grow:0.1000" href="band/44-48--46p6-47/" title="Federal fixed and mobile — 46.6–47 MHz" aria-label="Federal fixed and mobile — 46.6–47 MHz">46.6–47</a><a class="band-seg cat-land-mobile" style="flex-grow:0.2500" href="band/44-48--47-48/" title="Land mobile (VHF low band) — 47–48 MHz" aria-label="Land mobile (VHF low band) — 47–48 MHz">47–48</a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">44</span><span style="left:65.00%">46.6</span><span style="left:75.00%">47</span><span style="left:100.00%">48</span></div>
+    <div class="band-list"><a href="band/44-48--44-46p6/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">Land mobile (VHF low band)</span><span class="bl-range">44–46.6 MHz</span></a><a href="band/44-48--46p6-47/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">46.6–47 MHz</span></a><a href="band/44-48--47-48/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">Land mobile (VHF low band)</span><span class="bl-range">47–48 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-100-200">
+    <div class="group-head"><h2>100–200 MHz</h2><p>FM radio, aviation, satellites, amateur, land mobile, marine, federal and VHF television.</p></div>
+    <div class="band-bar"><a class="band-seg cat-broadcast" style="flex-grow:0.0800" href="band/100-200--100-108/" title="FM radio broadcasting — 100–108 MHz" aria-label="FM radio broadcasting — 100–108 MHz"></a><a class="band-seg cat-aeronautical" style="flex-grow:0.0997" href="band/100-200--108-117p975/" title="Aeronautical radionavigation — 108–117.975 MHz" aria-label="Aeronautical radionavigation — 108–117.975 MHz">108–117.975</a><a class="band-seg cat-aeronautical" style="flex-grow:0.1903" href="band/100-200--117p975-137/" title="Aeronautical mobile (air traffic voice) — 117.975–137 MHz" aria-label="Aeronautical mobile (air traffic voice) — 117.975–137 MHz">117.975–137</a><a class="band-seg cat-satellite" style="flex-grow:0.0100" href="band/100-200--137-138/" title="Satellite downlinks — 137–138 MHz" aria-label="Satellite downlinks — 137–138 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0600" href="band/100-200--138-144/" title="Federal fixed and mobile — 138–144 MHz" aria-label="Federal fixed and mobile — 138–144 MHz"></a><a class="band-seg cat-amateur" style="flex-grow:0.0400" href="band/100-200--144-148/" title="Amateur radio (2 m band) — 144–148 MHz" aria-label="Amateur radio (2 m band) — 144–148 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0205" href="band/100-200--148-150p05/" title="Federal fixed and mobile; satellite uplinks — 148–150.05 MHz" aria-label="Federal fixed and mobile; satellite uplinks — 148–150.05 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0075" href="band/100-200--150p05-150p8/" title="Federal fixed and mobile — 150.05–150.8 MHz" aria-label="Federal fixed and mobile — 150.05–150.8 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0545" href="band/100-200--150p8-156p2475/" title="Land mobile (VHF high band) — 150.8–156.248 MHz" aria-label="Land mobile (VHF high band) — 150.8–156.248 MHz"></a><a class="band-seg cat-maritime" style="flex-grow:0.0094" href="band/100-200--156p2475-157p1875/" title="Maritime mobile (VHF marine) — 156.248–157.188 MHz" aria-label="Maritime mobile (VHF marine) — 156.248–157.188 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0439" href="band/100-200--157p1875-161p575/" title="Mobile (land mobile and maritime) — 157.188–161.575 MHz" aria-label="Mobile (land mobile and maritime) — 157.188–161.575 MHz"></a><a class="band-seg cat-maritime" style="flex-grow:0.0046" href="band/100-200--161p575-162p0375/" title="Maritime mobile and land mobile (includes AIS) — 161.575–162.037 MHz" aria-label="Maritime mobile and land mobile (includes AIS) — 161.575–162.037 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.1196" href="band/100-200--162p0375-174/" title="Federal fixed and mobile — 162.037–174 MHz" aria-label="Federal fixed and mobile — 162.037–174 MHz">162.037–174</a><a class="band-seg cat-broadcast" style="flex-grow:0.0600" href="band/100-200--174-180/" title="TV channel 7 — 174–180 MHz" aria-label="TV channel 7 — 174–180 MHz"></a><a class="band-seg cat-broadcast" style="flex-grow:0.0600" href="band/100-200--180-186/" title="TV channel 8 — 180–186 MHz" aria-label="TV channel 8 — 180–186 MHz"></a><a class="band-seg cat-broadcast" style="flex-grow:0.0600" href="band/100-200--186-192/" title="TV channel 9 — 186–192 MHz" aria-label="TV channel 9 — 186–192 MHz"></a><a class="band-seg cat-broadcast" style="flex-grow:0.0600" href="band/100-200--192-198/" title="TV channel 10 — 192–198 MHz" aria-label="TV channel 10 — 192–198 MHz"></a><a class="band-seg cat-broadcast" style="flex-grow:0.0200" href="band/100-200--198-200/" title="TV channel 11 (lower 2 MHz only) — 198–200 MHz" aria-label="TV channel 11 (lower 2 MHz only) — 198–200 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">100</span><span style="left:8.00%">108</span><span style="left:17.97%">117.975</span><span style="left:37.00%">137</span><span style="left:44.00%">144</span><span style="left:50.05%">150.05</span><span style="left:56.25%">156.248</span><span style="left:74.00%">174</span><span style="left:80.00%">180</span><span style="left:92.00%">192</span><span style="left:100.00%">200</span></div>
+    <div class="band-list"><a href="band/100-200--100-108/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">FM radio broadcasting</span><span class="bl-range">100–108 MHz</span></a><a href="band/100-200--108-117p975/" class="cat-aeronautical"><span class="cat-dot"></span><span class="bl-name">Aeronautical radionavigation</span><span class="bl-range">108–117.975 MHz</span></a><a href="band/100-200--117p975-137/" class="cat-aeronautical"><span class="cat-dot"></span><span class="bl-name">Aeronautical mobile (air traffic voice)</span><span class="bl-range">117.975–137 MHz</span></a><a href="band/100-200--137-138/" class="cat-satellite"><span class="cat-dot"></span><span class="bl-name">Satellite downlinks</span><span class="bl-range">137–138 MHz</span></a><a href="band/100-200--138-144/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">138–144 MHz</span></a><a href="band/100-200--144-148/" class="cat-amateur"><span class="cat-dot"></span><span class="bl-name">Amateur radio (2 m band)</span><span class="bl-range">144–148 MHz</span></a><a href="band/100-200--148-150p05/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile; satellite uplinks</span><span class="bl-range">148–150.05 MHz</span></a><a href="band/100-200--150p05-150p8/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">150.05–150.8 MHz</span></a><a href="band/100-200--150p8-156p2475/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">Land mobile (VHF high band)</span><span class="bl-range">150.8–156.248 MHz</span></a><a href="band/100-200--156p2475-157p1875/" class="cat-maritime"><span class="cat-dot"></span><span class="bl-name">Maritime mobile (VHF marine)</span><span class="bl-range">156.248–157.188 MHz</span></a><a href="band/100-200--157p1875-161p575/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">Mobile (land mobile and maritime)</span><span class="bl-range">157.188–161.575 MHz</span></a><a href="band/100-200--161p575-162p0375/" class="cat-maritime"><span class="cat-dot"></span><span class="bl-name">Maritime mobile and land mobile (includes AIS)</span><span class="bl-range">161.575–162.037 MHz</span></a><a href="band/100-200--162p0375-174/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">162.037–174 MHz</span></a><a href="band/100-200--174-180/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 7</span><span class="bl-range">174–180 MHz</span></a><a href="band/100-200--180-186/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 8</span><span class="bl-range">180–186 MHz</span></a><a href="band/100-200--186-192/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 9</span><span class="bl-range">186–192 MHz</span></a><a href="band/100-200--192-198/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 10</span><span class="bl-range">192–198 MHz</span></a><a href="band/100-200--198-200/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 11 (lower 2 MHz only)</span><span class="bl-range">198–200 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-fed-138-144">
+    <div class="group-head"><h2>Fed 138–144 MHz</h2><p>Federal fixed and mobile spectrum, shown in 1 MHz slices.</p></div>
+    <div class="band-bar"><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--138-139/" title="Federal fixed and mobile — 138–139 MHz" aria-label="Federal fixed and mobile — 138–139 MHz">138–139</a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--139-140/" title="Federal fixed and mobile — 139–140 MHz" aria-label="Federal fixed and mobile — 139–140 MHz">139–140</a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--140-141/" title="Federal fixed and mobile — 140–141 MHz" aria-label="Federal fixed and mobile — 140–141 MHz">140–141</a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--141-142/" title="Federal fixed and mobile — 141–142 MHz" aria-label="Federal fixed and mobile — 141–142 MHz">141–142</a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--142-143/" title="Federal fixed and mobile — 142–143 MHz" aria-label="Federal fixed and mobile — 142–143 MHz">142–143</a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/fed-138-144--143-144/" title="Federal fixed and mobile — 143–144 MHz" aria-label="Federal fixed and mobile — 143–144 MHz">143–144</a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">138</span><span style="left:16.67%">139</span><span style="left:33.33%">140</span><span style="left:50.00%">141</span><span style="left:66.67%">142</span><span style="left:83.33%">143</span><span style="left:100.00%">144</span></div>
+    <div class="band-list"><a href="band/fed-138-144--138-139/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">138–139 MHz</span></a><a href="band/fed-138-144--139-140/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">139–140 MHz</span></a><a href="band/fed-138-144--140-141/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">140–141 MHz</span></a><a href="band/fed-138-144--141-142/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">141–142 MHz</span></a><a href="band/fed-138-144--142-143/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">142–143 MHz</span></a><a href="band/fed-138-144--143-144/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">143–144 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-fed-162-174">
+    <div class="group-head"><h2>Fed 162–174 MHz</h2><p>Federal fixed and mobile spectrum, shown in 1 MHz slices.</p></div>
+    <div class="band-bar"><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--162-163/" title="Federal fixed and mobile — 162–163 MHz" aria-label="Federal fixed and mobile — 162–163 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--163-164/" title="Federal fixed and mobile — 163–164 MHz" aria-label="Federal fixed and mobile — 163–164 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--164-165/" title="Federal fixed and mobile — 164–165 MHz" aria-label="Federal fixed and mobile — 164–165 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--165-166/" title="Federal fixed and mobile — 165–166 MHz" aria-label="Federal fixed and mobile — 165–166 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--166-167/" title="Federal fixed and mobile — 166–167 MHz" aria-label="Federal fixed and mobile — 166–167 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--167-168/" title="Federal fixed and mobile — 167–168 MHz" aria-label="Federal fixed and mobile — 167–168 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--168-169/" title="Federal fixed and mobile — 168–169 MHz" aria-label="Federal fixed and mobile — 168–169 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--169-170/" title="Federal fixed and mobile — 169–170 MHz" aria-label="Federal fixed and mobile — 169–170 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--170-171/" title="Federal fixed and mobile — 170–171 MHz" aria-label="Federal fixed and mobile — 170–171 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--171-172/" title="Federal fixed and mobile — 171–172 MHz" aria-label="Federal fixed and mobile — 171–172 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--172-173/" title="Federal fixed and mobile — 172–173 MHz" aria-label="Federal fixed and mobile — 172–173 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0833" href="band/fed-162-174--173-174/" title="Federal fixed and mobile — 173–174 MHz" aria-label="Federal fixed and mobile — 173–174 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">162</span><span style="left:8.33%">163</span><span style="left:16.67%">164</span><span style="left:25.00%">165</span><span style="left:33.33%">166</span><span style="left:41.67%">167</span><span style="left:50.00%">168</span><span style="left:58.33%">169</span><span style="left:66.67%">170</span><span style="left:75.00%">171</span><span style="left:83.33%">172</span><span style="left:91.67%">173</span><span style="left:100.00%">174</span></div>
+    <div class="band-list"><a href="band/fed-162-174--162-163/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">162–163 MHz</span></a><a href="band/fed-162-174--163-164/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">163–164 MHz</span></a><a href="band/fed-162-174--164-165/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">164–165 MHz</span></a><a href="band/fed-162-174--165-166/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">165–166 MHz</span></a><a href="band/fed-162-174--166-167/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">166–167 MHz</span></a><a href="band/fed-162-174--167-168/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">167–168 MHz</span></a><a href="band/fed-162-174--168-169/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">168–169 MHz</span></a><a href="band/fed-162-174--169-170/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">169–170 MHz</span></a><a href="band/fed-162-174--170-171/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">170–171 MHz</span></a><a href="band/fed-162-174--171-172/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">171–172 MHz</span></a><a href="band/fed-162-174--172-173/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">172–173 MHz</span></a><a href="band/fed-162-174--173-174/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">173–174 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-400-460">
+    <div class="group-head"><h2>400–460 MHz</h2><p>Weather and satellite services, federal spectrum, radar/amateur and UHF land mobile.</p></div>
+    <div class="band-bar"><a class="band-seg cat-satellite" style="flex-grow:0.0167" href="band/400-460--400-401/" title="Satellite and meteorological services — 400–401 MHz" aria-label="Satellite and meteorological services — 400–401 MHz"></a><a class="band-seg cat-satellite" style="flex-grow:0.0833" href="band/400-460--401-406/" title="Meteorological aids (radiosondes) — 401–406 MHz" aria-label="Meteorological aids (radiosondes) — 401–406 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.0667" href="band/400-460--406-410/" title="Federal fixed and mobile; radio astronomy — 406–410 MHz" aria-label="Federal fixed and mobile; radio astronomy — 406–410 MHz"></a><a class="band-seg cat-federal" style="flex-grow:0.1667" href="band/400-460--410-420/" title="Federal fixed and mobile — 410–420 MHz" aria-label="Federal fixed and mobile — 410–420 MHz">410–420</a><a class="band-seg cat-radiolocation" style="flex-grow:0.1667" href="band/400-460--420-430/" title="Radiolocation (federal radar); amateur 70 cm — 420–430 MHz" aria-label="Radiolocation (federal radar); amateur 70 cm — 420–430 MHz">420–430</a><a class="band-seg cat-radiolocation" style="flex-grow:0.1667" href="band/400-460--430-440/" title="Radiolocation (federal radar); amateur 70 cm — 430–440 MHz" aria-label="Radiolocation (federal radar); amateur 70 cm — 430–440 MHz">430–440</a><a class="band-seg cat-radiolocation" style="flex-grow:0.1667" href="band/400-460--440-450/" title="Radiolocation (federal radar); amateur 70 cm — 440–450 MHz" aria-label="Radiolocation (federal radar); amateur 70 cm — 440–450 MHz">440–450</a><a class="band-seg cat-land-mobile" style="flex-grow:0.0667" href="band/400-460--450-454/" title="UHF land mobile — 450–454 MHz" aria-label="UHF land mobile — 450–454 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0333" href="band/400-460--454-456/" title="UHF land mobile — 454–456 MHz" aria-label="UHF land mobile — 454–456 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0667" href="band/400-460--456-460/" title="UHF land mobile — 456–460 MHz" aria-label="UHF land mobile — 456–460 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">400</span><span style="left:10.00%">406</span><span style="left:16.67%">410</span><span style="left:33.33%">420</span><span style="left:50.00%">430</span><span style="left:66.67%">440</span><span style="left:83.33%">450</span><span style="left:90.00%">454</span><span style="left:100.00%">460</span></div>
+    <div class="band-list"><a href="band/400-460--400-401/" class="cat-satellite"><span class="cat-dot"></span><span class="bl-name">Satellite and meteorological services</span><span class="bl-range">400–401 MHz</span></a><a href="band/400-460--401-406/" class="cat-satellite"><span class="cat-dot"></span><span class="bl-name">Meteorological aids (radiosondes)</span><span class="bl-range">401–406 MHz</span></a><a href="band/400-460--406-410/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile; radio astronomy</span><span class="bl-range">406–410 MHz</span></a><a href="band/400-460--410-420/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">410–420 MHz</span></a><a href="band/400-460--420-430/" class="cat-radiolocation"><span class="cat-dot"></span><span class="bl-name">Radiolocation (federal radar); amateur 70 cm</span><span class="bl-range">420–430 MHz</span></a><a href="band/400-460--430-440/" class="cat-radiolocation"><span class="cat-dot"></span><span class="bl-name">Radiolocation (federal radar); amateur 70 cm</span><span class="bl-range">430–440 MHz</span></a><a href="band/400-460--440-450/" class="cat-radiolocation"><span class="cat-dot"></span><span class="bl-name">Radiolocation (federal radar); amateur 70 cm</span><span class="bl-range">440–450 MHz</span></a><a href="band/400-460--450-454/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">450–454 MHz</span></a><a href="band/400-460--454-456/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">454–456 MHz</span></a><a href="band/400-460--456-460/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">456–460 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-fed-406-420">
+    <div class="group-head"><h2>Fed 406–420 MHz</h2><p>Federal fixed and mobile spectrum, shown in 2 MHz slices.</p></div>
+    <div class="band-bar"><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--406-408/" title="Federal fixed and mobile — 406–408 MHz" aria-label="Federal fixed and mobile — 406–408 MHz">406–408</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--408-410/" title="Federal fixed and mobile — 408–410 MHz" aria-label="Federal fixed and mobile — 408–410 MHz">408–410</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--410-412/" title="Federal fixed and mobile — 410–412 MHz" aria-label="Federal fixed and mobile — 410–412 MHz">410–412</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--412-414/" title="Federal fixed and mobile — 412–414 MHz" aria-label="Federal fixed and mobile — 412–414 MHz">412–414</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--414-416/" title="Federal fixed and mobile — 414–416 MHz" aria-label="Federal fixed and mobile — 414–416 MHz">414–416</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--416-418/" title="Federal fixed and mobile — 416–418 MHz" aria-label="Federal fixed and mobile — 416–418 MHz">416–418</a><a class="band-seg cat-federal" style="flex-grow:0.1429" href="band/fed-406-420--418-420/" title="Federal fixed and mobile — 418–420 MHz" aria-label="Federal fixed and mobile — 418–420 MHz">418–420</a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">406</span><span style="left:14.29%">408</span><span style="left:28.57%">410</span><span style="left:42.86%">412</span><span style="left:57.14%">414</span><span style="left:71.43%">416</span><span style="left:85.71%">418</span><span style="left:100.00%">420</span></div>
+    <div class="band-list"><a href="band/fed-406-420--406-408/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">406–408 MHz</span></a><a href="band/fed-406-420--408-410/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">408–410 MHz</span></a><a href="band/fed-406-420--410-412/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">410–412 MHz</span></a><a href="band/fed-406-420--412-414/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">412–414 MHz</span></a><a href="band/fed-406-420--414-416/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">414–416 MHz</span></a><a href="band/fed-406-420--416-418/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">416–418 MHz</span></a><a href="band/fed-406-420--418-420/" class="cat-federal"><span class="cat-dot"></span><span class="bl-name">Federal fixed and mobile</span><span class="bl-range">418–420 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-460-463">
+    <div class="group-head"><h2>460–463 MHz</h2><p>UHF land mobile, including the GMRS/FRS channels.</p></div>
+    <div class="band-bar"><a class="band-seg cat-land-mobile" style="flex-grow:0.3333" href="band/460-463--460-461/" title="UHF land mobile — 460–461 MHz" aria-label="UHF land mobile — 460–461 MHz">460–461</a><a class="band-seg cat-land-mobile" style="flex-grow:0.3333" href="band/460-463--461-462/" title="UHF land mobile — 461–462 MHz" aria-label="UHF land mobile — 461–462 MHz">461–462</a><a class="band-seg cat-land-mobile" style="flex-grow:0.1792" href="band/460-463--462-462p5375/" title="UHF land mobile — 462–462.538 MHz" aria-label="UHF land mobile — 462–462.538 MHz">462–462.538</a><a class="band-seg cat-land-mobile" style="flex-grow:0.0667" href="band/460-463--462p5375-462p7375/" title="GMRS / FRS (personal radio) — 462.538–462.738 MHz" aria-label="GMRS / FRS (personal radio) — 462.538–462.738 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0875" href="band/460-463--462p7375-463/" title="UHF land mobile — 462.738–463 MHz" aria-label="UHF land mobile — 462.738–463 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">460</span><span style="left:33.33%">461</span><span style="left:66.67%">462</span><span style="left:84.58%">462.538</span><span style="left:91.25%">462.738</span><span style="left:100.00%">463</span></div>
+    <div class="band-list"><a href="band/460-463--460-461/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">460–461 MHz</span></a><a href="band/460-463--461-462/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">461–462 MHz</span></a><a href="band/460-463--462-462p5375/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">462–462.538 MHz</span></a><a href="band/460-463--462p5375-462p7375/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">GMRS / FRS (personal radio)</span><span class="bl-range">462.538–462.738 MHz</span></a><a href="band/460-463--462p7375-463/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">462.738–463 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-463-516">
+    <div class="group-head"><h2>463–516 MHz</h2><p>UHF land mobile and UHF television channels 14–21.</p></div>
+    <div class="band-bar"><a class="band-seg cat-land-mobile" style="flex-grow:0.0856" href="band/463-516--463-467p5375/" title="UHF land mobile — 463–467.538 MHz" aria-label="UHF land mobile — 463–467.538 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0038" href="band/463-516--467p5375-467p7375/" title="GMRS / FRS (personal radio) — 467.538–467.738 MHz" aria-label="GMRS / FRS (personal radio) — 467.538–467.738 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0427" href="band/463-516--467p7375-470/" title="UHF land mobile — 467.738–470 MHz" aria-label="UHF land mobile — 467.738–470 MHz"></a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--470-476/" title="TV channel 14 / land mobile — 470–476 MHz" aria-label="TV channel 14 / land mobile — 470–476 MHz">470–476</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--476-482/" title="TV channel 15 / land mobile — 476–482 MHz" aria-label="TV channel 15 / land mobile — 476–482 MHz">476–482</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--482-488/" title="TV channel 16 — 482–488 MHz" aria-label="TV channel 16 — 482–488 MHz">482–488</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--488-494/" title="TV channel 17 — 488–494 MHz" aria-label="TV channel 17 — 488–494 MHz">488–494</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--494-500/" title="TV channel 18 — 494–500 MHz" aria-label="TV channel 18 — 494–500 MHz">494–500</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--500-506/" title="TV channel 19 — 500–506 MHz" aria-label="TV channel 19 — 500–506 MHz">500–506</a><a class="band-seg cat-broadcast" style="flex-grow:0.1132" href="band/463-516--506-512/" title="TV channel 20 — 506–512 MHz" aria-label="TV channel 20 — 506–512 MHz">506–512</a><a class="band-seg cat-broadcast" style="flex-grow:0.0755" href="band/463-516--512-516/" title="TV channel 21 (lower 4 MHz only) — 512–516 MHz" aria-label="TV channel 21 (lower 4 MHz only) — 512–516 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">463</span><span style="left:8.56%">467.538</span><span style="left:24.53%">476</span><span style="left:35.85%">482</span><span style="left:47.17%">488</span><span style="left:58.49%">494</span><span style="left:69.81%">500</span><span style="left:81.13%">506</span><span style="left:92.45%">512</span><span style="left:100.00%">516</span></div>
+    <div class="band-list"><a href="band/463-516--463-467p5375/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">463–467.538 MHz</span></a><a href="band/463-516--467p5375-467p7375/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">GMRS / FRS (personal radio)</span><span class="bl-range">467.538–467.738 MHz</span></a><a href="band/463-516--467p7375-470/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">UHF land mobile</span><span class="bl-range">467.738–470 MHz</span></a><a href="band/463-516--470-476/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 14 / land mobile</span><span class="bl-range">470–476 MHz</span></a><a href="band/463-516--476-482/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 15 / land mobile</span><span class="bl-range">476–482 MHz</span></a><a href="band/463-516--482-488/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 16</span><span class="bl-range">482–488 MHz</span></a><a href="band/463-516--488-494/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 17</span><span class="bl-range">488–494 MHz</span></a><a href="band/463-516--494-500/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 18</span><span class="bl-range">494–500 MHz</span></a><a href="band/463-516--500-506/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 19</span><span class="bl-range">500–506 MHz</span></a><a href="band/463-516--506-512/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 20</span><span class="bl-range">506–512 MHz</span></a><a href="band/463-516--512-516/" class="cat-broadcast"><span class="cat-dot"></span><span class="bl-name">TV channel 21 (lower 4 MHz only)</span><span class="bl-range">512–516 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-700-800">
+    <div class="group-head"><h2>700–800 MHz</h2><p>700 MHz band: LTE and public safety.</p></div>
+    <div class="band-bar"><a class="band-seg cat-cellular" style="flex-grow:0.1700" href="band/700-800--700-717/" title="Lower 700 MHz A/B/C blocks, uplink — 700–717 MHz" aria-label="Lower 700 MHz A/B/C blocks, uplink — 700–717 MHz">700–717</a><a class="band-seg cat-cellular" style="flex-grow:0.1100" href="band/700-800--717-728/" title="LTE Band 29 downlink (Lower 700 MHz D/E blocks) — 717–728 MHz" aria-label="LTE Band 29 downlink (Lower 700 MHz D/E blocks) — 717–728 MHz">717–728</a><a class="band-seg cat-cellular" style="flex-grow:0.1800" href="band/700-800--728-746/" title="Lower 700 MHz A/B/C blocks, downlink — 728–746 MHz" aria-label="Lower 700 MHz A/B/C blocks, downlink — 728–746 MHz">728–746</a><a class="band-seg cat-cellular" style="flex-grow:0.1200" href="band/700-800--746-758/" title="Upper 700 MHz C block, downlink — 746–758 MHz" aria-label="Upper 700 MHz C block, downlink — 746–758 MHz">746–758</a><a class="band-seg cat-public-safety" style="flex-grow:0.0200" href="band/700-800--758-760/" title="LTE Band 14 downlink (FirstNet), part 1 of 2 — 758–760 MHz" aria-label="LTE Band 14 downlink (FirstNet), part 1 of 2 — 758–760 MHz"></a><a class="band-seg cat-public-safety" style="flex-grow:0.0800" href="band/700-800--760-768/" title="LTE Band 14 downlink (FirstNet), part 2 of 2 — 760–768 MHz" aria-label="LTE Band 14 downlink (FirstNet), part 2 of 2 — 760–768 MHz"></a><a class="band-seg cat-public-safety" style="flex-grow:0.0800" href="band/700-800--768-776/" title="700 MHz public safety narrowband (base) and guard bands — 768–776 MHz" aria-label="700 MHz public safety narrowband (base) and guard bands — 768–776 MHz"></a><a class="band-seg cat-cellular" style="flex-grow:0.0400" href="band/700-800--776-780/" title="Upper 700 MHz C block, uplink, part 1 of 2 — 776–780 MHz" aria-label="Upper 700 MHz C block, uplink, part 1 of 2 — 776–780 MHz"></a><a class="band-seg cat-cellular" style="flex-grow:0.0800" href="band/700-800--780-788/" title="Upper 700 MHz C block, uplink, part 2 of 2 — 780–788 MHz" aria-label="Upper 700 MHz C block, uplink, part 2 of 2 — 780–788 MHz"></a><a class="band-seg cat-public-safety" style="flex-grow:0.1000" href="band/700-800--788-798/" title="LTE Band 14 uplink (FirstNet) — 788–798 MHz" aria-label="LTE Band 14 uplink (FirstNet) — 788–798 MHz">788–798</a><a class="band-seg cat-public-safety" style="flex-grow:0.0200" href="band/700-800--798-800/" title="700 MHz public safety narrowband (mobile) and guard band — 798–800 MHz" aria-label="700 MHz public safety narrowband (mobile) and guard band — 798–800 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">700</span><span style="left:17.00%">717</span><span style="left:28.00%">728</span><span style="left:46.00%">746</span><span style="left:58.00%">758</span><span style="left:68.00%">768</span><span style="left:76.00%">776</span><span style="left:88.00%">788</span><span style="left:100.00%">800</span></div>
+    <div class="band-list"><a href="band/700-800--700-717/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Lower 700 MHz A/B/C blocks, uplink</span><span class="bl-range">700–717 MHz</span></a><a href="band/700-800--717-728/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">LTE Band 29 downlink (Lower 700 MHz D/E blocks)</span><span class="bl-range">717–728 MHz</span></a><a href="band/700-800--728-746/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Lower 700 MHz A/B/C blocks, downlink</span><span class="bl-range">728–746 MHz</span></a><a href="band/700-800--746-758/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Upper 700 MHz C block, downlink</span><span class="bl-range">746–758 MHz</span></a><a href="band/700-800--758-760/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">LTE Band 14 downlink (FirstNet), part 1 of 2</span><span class="bl-range">758–760 MHz</span></a><a href="band/700-800--760-768/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">LTE Band 14 downlink (FirstNet), part 2 of 2</span><span class="bl-range">760–768 MHz</span></a><a href="band/700-800--768-776/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">700 MHz public safety narrowband (base) and guard bands</span><span class="bl-range">768–776 MHz</span></a><a href="band/700-800--776-780/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Upper 700 MHz C block, uplink, part 1 of 2</span><span class="bl-range">776–780 MHz</span></a><a href="band/700-800--780-788/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Upper 700 MHz C block, uplink, part 2 of 2</span><span class="bl-range">780–788 MHz</span></a><a href="band/700-800--788-798/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">LTE Band 14 uplink (FirstNet)</span><span class="bl-range">788–798 MHz</span></a><a href="band/700-800--798-800/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">700 MHz public safety narrowband (mobile) and guard band</span><span class="bl-range">798–800 MHz</span></a></div>
+  </section>
+  <section class="card group" id="g-800-900">
+    <div class="group-head"><h2>800–900 MHz</h2><p>800 MHz band: public safety, land mobile, cellular and air-ground.</p></div>
+    <div class="band-bar"><a class="band-seg cat-public-safety" style="flex-grow:0.0600" href="band/800-900--800-806/" title="700 MHz public safety narrowband (mobile) and guard band — 800–806 MHz" aria-label="700 MHz public safety narrowband (mobile) and guard band — 800–806 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.1800" href="band/800-900--806-824/" title="800 MHz land mobile, mobile transmit — 806–824 MHz" aria-label="800 MHz land mobile, mobile transmit — 806–824 MHz">806–824</a><a class="band-seg cat-cellular" style="flex-grow:0.2500" href="band/800-900--824-849/" title="Cellular uplink (LTE Band 5) — 824–849 MHz" aria-label="Cellular uplink (LTE Band 5) — 824–849 MHz">824–849</a><a class="band-seg cat-aeronautical" style="flex-grow:0.0200" href="band/800-900--849-851/" title="Air-ground radiotelephone (ground stations) — 849–851 MHz" aria-label="Air-ground radiotelephone (ground stations) — 849–851 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.1800" href="band/800-900--851-869/" title="800 MHz land mobile, base transmit — 851–869 MHz" aria-label="800 MHz land mobile, base transmit — 851–869 MHz">851–869</a><a class="band-seg cat-cellular" style="flex-grow:0.2500" href="band/800-900--869-894/" title="Cellular downlink (LTE Band 5) — 869–894 MHz" aria-label="Cellular downlink (LTE Band 5) — 869–894 MHz">869–894</a><a class="band-seg cat-aeronautical" style="flex-grow:0.0200" href="band/800-900--894-896/" title="Air-ground radiotelephone (aircraft) — 894–896 MHz" aria-label="Air-ground radiotelephone (aircraft) — 894–896 MHz"></a><a class="band-seg cat-land-mobile" style="flex-grow:0.0400" href="band/800-900--896-900/" title="900 MHz land mobile, mobile transmit — 896–900 MHz" aria-label="900 MHz land mobile, mobile transmit — 896–900 MHz"></a></div>
+    <div class="band-ticks" aria-hidden="true"><span style="left:0.00%">800</span><span style="left:6.00%">806</span><span style="left:24.00%">824</span><span style="left:49.00%">849</span><span style="left:69.00%">869</span><span style="left:94.00%">894</span><span style="left:100.00%">900</span></div>
+    <div class="band-list"><a href="band/800-900--800-806/" class="cat-public-safety"><span class="cat-dot"></span><span class="bl-name">700 MHz public safety narrowband (mobile) and guard band</span><span class="bl-range">800–806 MHz</span></a><a href="band/800-900--806-824/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">800 MHz land mobile, mobile transmit</span><span class="bl-range">806–824 MHz</span></a><a href="band/800-900--824-849/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Cellular uplink (LTE Band 5)</span><span class="bl-range">824–849 MHz</span></a><a href="band/800-900--849-851/" class="cat-aeronautical"><span class="cat-dot"></span><span class="bl-name">Air-ground radiotelephone (ground stations)</span><span class="bl-range">849–851 MHz</span></a><a href="band/800-900--851-869/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">800 MHz land mobile, base transmit</span><span class="bl-range">851–869 MHz</span></a><a href="band/800-900--869-894/" class="cat-cellular"><span class="cat-dot"></span><span class="bl-name">Cellular downlink (LTE Band 5)</span><span class="bl-range">869–894 MHz</span></a><a href="band/800-900--894-896/" class="cat-aeronautical"><span class="cat-dot"></span><span class="bl-name">Air-ground radiotelephone (aircraft)</span><span class="bl-range">894–896 MHz</span></a><a href="band/800-900--896-900/" class="cat-land-mobile"><span class="cat-dot"></span><span class="bl-name">900 MHz land mobile, mobile transmit</span><span class="bl-range">896–900 MHz</span></a></div>
+  </section>
 </main>
-
-<script>
-(function(){
-  const header    = document.getElementById('siteHeader');
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-
-  const SCROLL_THRESHOLD = 60;
-  let ticking = false;
-  function onScroll(){
-    if (!ticking){
-      requestAnimationFrame(() => {
-        header.classList.toggle('is-scrolled', window.scrollY > SCROLL_THRESHOLD);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  const triggers = document.querySelectorAll('.nav-trigger');
-  function closeAllPanels(except){
-    triggers.forEach(btn => {
-      if (btn === except) return;
-      btn.setAttribute('aria-expanded', 'false');
-      document.getElementById(btn.getAttribute('aria-controls')).classList.remove('open');
-    });
-  }
-  triggers.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const panel = document.getElementById(btn.getAttribute('aria-controls'));
-      const isOpen = panel.classList.contains('open');
-      closeAllPanels(btn);
-      panel.classList.toggle('open', !isOpen);
-      btn.setAttribute('aria-expanded', String(!isOpen));
-    });
-  });
-
-  if (hamburger){
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', String(isOpen));
-    });
-  }
-
-  const searchToggle = document.querySelector('.site-search__toggle');
-  const searchPanel  = document.getElementById('searchPanel');
-  if (searchToggle && searchPanel){
-    const srLabel = searchToggle.querySelector('.show-for-sr');
-    searchToggle.addEventListener('click', () => {
-      const opening = searchToggle.getAttribute('aria-expanded') !== 'true';
-      searchToggle.setAttribute('aria-expanded', String(opening));
-      document.body.classList.toggle(searchToggle.dataset.buttonOpenClass, opening);
-      searchPanel.hidden = !opening;
-      srLabel.textContent = opening
-        ? searchToggle.dataset.buttonCloseText
-        : searchToggle.dataset.buttonOpenText;
-      if (opening) searchPanel.querySelector('input').focus();
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.main-nav')) closeAllPanels(null);
-    if (!e.target.closest('.scrolled-actions')) mobileMenu.classList.remove('open');
-    if (searchToggle && !e.target.closest('.site-search__toggle') && !e.target.closest('.search-panel')){
-      searchToggle.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove(searchToggle.dataset.buttonOpenClass);
-      searchPanel.hidden = true;
-      searchToggle.querySelector('.show-for-sr').textContent = searchToggle.dataset.buttonOpenText;
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape'){
-      closeAllPanels(null);
-      mobileMenu.classList.remove('open');
-      if (searchToggle){
-        searchToggle.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove(searchToggle.dataset.buttonOpenClass);
-        searchPanel.hidden = true;
-        searchToggle.querySelector('.show-for-sr').textContent = searchToggle.dataset.buttonOpenText;
-      }
-    }
-  });
-})();
-</script>
-
-<script>
-const LAYOUT_BASE = {
-  paper_bgcolor: "#fff",
-  plot_bgcolor:  "#fff",
-  font: { color: "#1a1a1a", family: "Arial, Helvetica, sans-serif", size: 11 },
-  margin: { t: 20, r: 20, b: 50, l: 65 },
-  xaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-  yaxis: { gridcolor: "#e8e8e8", zerolinecolor: "#ccc", linecolor: "#ccc" },
-};
-const CONFIG = { responsive: true, displayModeBar: false };
-
-async function loadHistogram() {
-  const res = await fetch("data/histogram.json");
-  const d = await res.json();
-  const edges = d.edges;
-  const x = edges.slice(0, -1).map((e, i) => (e + edges[i+1]) / 2);
-  Plotly.react("histogram", [{
-    x, y: d.counts, type: "bar",
-    marker: { color: "#CC0000" },
-    hovertemplate: "%{x:.1f} dBm — %{y:,}<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Power (dBm)" } },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Count" } },
-    bargap: 0,
-  }, CONFIG);
-}
-
-async function loadHeatmap() {
-  const res = await fetch("data/data.json");
-  const d = await res.json();
-  Plotly.react("heatmap", [{
-    z: d.powers, x: d.freqs, y: d.timestamps,
-    type: "heatmap",
-    colorscale: "Viridis",
-    colorbar: { title: { text: "dBm", side: "right" }, tickfont: { color: "#333" } },
-    hovertemplate: "Freq: %{x:.2f} MHz<br>Time: %{y}<br>Power: %{z:.1f} dBm<extra></extra>",
-  }], {
-    ...LAYOUT_BASE,
-    margin: { t: 20, r: 80, b: 50, l: 80 },
-    xaxis: { ...LAYOUT_BASE.xaxis, title: { text: "Frequency (MHz)" }, range: [30, 54] },
-    yaxis: { ...LAYOUT_BASE.yaxis, title: { text: "Time (Chicago)" }, autorange: "reversed" },
-  }, CONFIG);
-}
-
-async function loadStats() {
-  const res = await fetch("data/stats.json");
-  const d = await res.json();
-  const items = [
-    { label: "Frequency Range", value: "30–54", unit: "MHz" },
-    { label: "Sweeps", value: d.num_sweeps },
-    { label: "Min Power", value: d.min_power.toFixed(1), unit: "dBm" },
-    { label: "Max Power", value: d.max_power.toFixed(1), unit: "dBm" },
-    { label: "Mean Power", value: d.mean_power.toFixed(1), unit: "dBm" },
-    { label: "Noise Floor (p10)", value: d.noise_floor.toFixed(1), unit: "dBm" },
-    { label: "Spectral Occupancy", value: d.occupancy_pct.toFixed(1), unit: "%",
-      note: "% of readings exceeding noise floor by >6 dB" },
-  ];
-  document.getElementById("stats-grid").innerHTML = items.map(it => `
-    <div class="stat-item">
-      <div class="stat-label">${it.label}</div>
-      <div class="stat-value">${it.value}${it.unit ? `<span class="stat-unit">${it.unit}</span>` : ""}</div>
-      ${it.note ? `<div class="stat-note">${it.note}</div>` : ""}
-    </div>`).join("");
-}
-
-async function boot() {
-  try {
-    await Promise.all([loadHistogram(), loadHeatmap(), loadStats()]);
-  } finally {
-    const o = document.getElementById("loading-overlay");
-    o.classList.add("hidden");
-    setTimeout(() => o.remove(), 400);
-  }
-}
-boot();
-</script>
+<script src="assets/header.js?v=c73a06961d"></script>
 </body>
 </html>
