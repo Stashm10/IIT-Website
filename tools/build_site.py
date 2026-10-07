@@ -10,11 +10,16 @@ import os
 import shutil
 from html import escape
 
-from ntia import NTIA_COLORS, services
+from ntia import MARKER_COLORS, MARKER_NAMES, SERVICE_COLORS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 TEMPLATES = os.path.join(HERE, "templates")
+PLAN_DIR = os.environ.get("IIT_V2_DIR", HERE)  # where bands.json lives (same rule as build_data.py)
+SECONDARY_SHARE = 0.2  # a secondary service's stripe: one fifth of the service area
+LEGEND_NOTE = ("Stripe colours are adapted from the NTIA United States Frequency Allocations chart. "
+               "Service names in CAPITALS are primary allocations; a thin stripe and lower-case name "
+               "mark a secondary allocation.")
 YEAR = 2018
 
 CATEGORY_NAMES = {
@@ -70,33 +75,78 @@ def coverage_html(dates):
     return "\n".join(out)
 
 
+def stripe_layout(band):
+    """[(allocation, share of the service area)] in drawing order, from the band's `allocations`:
+    primary services in listed order share the area equally; secondary services follow below them
+    as thin stripes (SECONDARY_SHARE each)."""
+    primary = [a for a in band["allocations"] if a["status"] == "primary"]
+    secondary = [a for a in band["allocations"] if a["status"] == "secondary"]
+    rest = 1 - SECONDARY_SHARE * len(secondary)
+    return [(a, rest / len(primary)) for a in primary] + [(a, SECONDARY_SHARE) for a in secondary]
+
+
+def allocation_text(a):
+    """'AERONAUTICAL MOBILE (R)' for a primary service, 'Amateur (secondary)' for a secondary one."""
+    text = a["service"] if a["status"] == "primary" else a["service"].capitalize()
+    if a.get("qualifier"):
+        text += f" {a['qualifier']}"
+    return text + (" (secondary)" if a["status"] == "secondary" else "")
+
+
+def services_text(band):
+    return ", ".join(allocation_text(a) for a, _ in stripe_layout(band))
+
+
+def allocation_notes(band):
+    return [f"{allocation_text(a)}: {a['note']}" for a, _ in stripe_layout(band) if a.get("note")]
+
+
+def marker_of(band, markers):
+    return band["category"] if band["category"] in markers else None
+
+
 def stripes(band, cls):
-    """One colored stripe per NTIA service of the band, top to bottom (as on the NTIA chart)."""
-    names = services(band["services"])
-    cells = "".join(f'<span style="background:{NTIA_COLORS[n]}"></span>' for n in names)
-    return f'<span class="{cls}" title="{escape(" + ".join(names))}">{cells}</span>'
+    """The band's service stripes, top to bottom, sized by stripe_layout()."""
+    cells = "".join(f'<span style="background:{SERVICE_COLORS[a["service"]]};flex-grow:{share * 100:g}"></span>'
+                    for a, share in stripe_layout(band))
+    return f'<span class="{cls}" title="{escape(services_text(band))}">{cells}</span>'
 
 
-def legend_html(bands):
-    """NTIA legend entries for the services that appear on the site, in the chart's (alphabetical) order."""
-    used = {n for b in bands for n in services(b["services"])}
-    return "".join(f'<span class="legend-item"><span class="svc-swatch">'
-                   f'<span style="background:{color}"></span></span>{escape(name)}</span>'
-                   for name, color in NTIA_COLORS.items() if name in used)
+def legend_html(bands, markers):
+    """Legend generated from bands.json: the services in use (alphabetical), the markers and a note."""
+    used = sorted({a["service"] for b in bands for a in b["allocations"]})
+    services = "".join(f'<span class="legend-item"><span class="svc-swatch"><span style="background:'
+                       f'{SERVICE_COLORS[s]}"></span></span>{escape(s)}</span>' for s in used)
+    marker_items = "".join(f'<span class="legend-item"><span class="marker-swatch" style="background:'
+                           f'{MARKER_COLORS[c]}"></span>{escape(MARKER_NAMES[c])}</span>' for c in markers)
+    return (f'<div class="legend-block"><div class="legend-title">Allocated services</div>'
+            f'<div class="legend">{services}</div></div>'
+            f'<div class="legend-block"><div class="legend-title">Markers</div>'
+            f'<div class="legend">{marker_items}</div></div>'
+            f'<p class="legend-note">{escape(LEGEND_NOTE)}</p>')
 
 
-def group_html(group, bands):
+def group_html(group, bands, markers):
     span = group["high_mhz"] - group["low_mhz"]
     segs, items, ticks = [], [], []
     last_tick = -1.0
     for b in bands:
         share = (b["high_mhz"] - b["low_mhz"]) / span
-        title = escape(f"{b['name']} — {band_range(b)} MHz")
-        segs.append(f'<a class="band-seg" style="flex-grow:{share:.4f}" '
-                    f'href="band/{b["id"]}/" title="{title}" aria-label="{title}">{stripes(b, "seg-stripes")}'
+        marker = marker_of(b, markers)
+        lines = [f"{b['name']} — {band_range(b)} MHz"]
+        lines += [allocation_text(a) for a, _ in stripe_layout(b)] + allocation_notes(b)
+        lines += [f"Category: {MARKER_NAMES[marker]}"] if marker else []
+        title = "&#10;".join(escape(line) for line in lines)
+        label = escape(f"{b['name']}, {band_range(b)} MHz. Services: {services_text(b)}"
+                       + (f". {MARKER_NAMES[marker]}" if marker else ""))
+        strip = f'<span class="seg-marker" style="background:{MARKER_COLORS[marker]}"></span>' if marker else ""
+        segs.append(f'<a class="band-seg{" has-marker" if marker else ""}" style="flex-grow:{share:.4f}" '
+                    f'href="band/{b["id"]}/" title="{title}" aria-label="{label}">{stripes(b, "seg-stripes")}{strip}'
                     f'<span class="seg-label" aria-hidden="true">{escape(band_range(b))}</span></a>')
-        items.append(f'<a href="band/{b["id"]}/">{stripes(b, "svc-swatch")}'
-                     f'<span class="bl-name">{escape(b["name"])}</span>'
+        tag = f'<span class="cat-tag">{escape(MARKER_NAMES[marker])}</span>' if marker else ""
+        items.append(f'<a href="band/{b["id"]}/" title="{escape(services_text(b))}">{stripes(b, "svc-swatch")}'
+                     f'<span class="bl-name">{escape(b["name"])}{tag}'
+                     f'<span class="sr-only"> Services: {escape(services_text(b))}</span></span>'
                      f'<span class="bl-range">{band_range(b)} MHz</span></a>')
     # Tick labels at band edges, skipping ones that would collide.
     edges = [group["low_mhz"]] + [b["high_mhz"] for b in bands]
@@ -121,13 +171,15 @@ def chrome():
 
 def band_page(band, group, v):
     sub = band["subband"]
+    notes = allocation_notes(band)
+    alloc_notes = (f'<span class="meta-chip">Allocation notes: {escape(" ".join(notes))}</span>' if notes else "")
     note = (f'<span class="meta-chip">Note: {escape(band["note"])}</span>' if band.get("note") else "")
     return fill(
         template("band.html"),
         **chrome(), v=v, id=band["id"], name=escape(band["name"]), range=band_range(band),
         group_id=group["id"], group_label=escape(f"Group {group['label']}"),
         category=CATEGORY_NAMES[band["category"]], swatch=stripes(band, "svc-swatch"),
-        services=escape(band["services"]), subband=f"{mhz(sub['start_mhz'])}–{mhz(sub['stop_mhz'])}",
+        services=escape(services_text(band)), alloc_notes=alloc_notes, subband=f"{mhz(sub['start_mhz'])}–{mhz(sub['stop_mhz'])}",
         num_points=band.get("num_points", "–"), note=note,
     )
 
@@ -144,8 +196,10 @@ def main():
             days = json.load(fh)["days"]
         band["num_points"] = days[0]["num_points"] if days else "–"
 
-    groups_html = "\n".join(group_html(g, [bands[i] for i in g["band_ids"]]) for g in index["groups"])
-    legend = legend_html(bands.values())
+    with open(os.path.join(PLAN_DIR, "bands.json")) as fh:
+        markers = json.load(fh)["rules"]["category_markers"]
+    groups_html = "\n".join(group_html(g, [bands[i] for i in g["band_ids"]], markers) for g in index["groups"])
+    legend = legend_html(bands.values(), markers)
     with open(os.path.join(REPO, "index.html"), "w") as fh:
         fh.write(fill(template("index.html"), **chrome(), v=v, num_days=len(index["dates"]), coverage=coverage_html(index["dates"]),
                       legend=legend, groups=groups_html))

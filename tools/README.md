@@ -7,13 +7,13 @@ The site is plain static HTML (GitHub Pages). Everything under `data/`, `band/` 
 
 | File | Purpose |
 |---|---|
-| `bands.json` | Band plan: the 10 groups and 91 bands, histogram bins. |
+| `bands.json` | Band plan: the 10 groups and 91 bands, each band's `allocations` (NTIA service, primary/secondary), histogram bins. |
 | `reference_2018-01-01.json` | Independent reference values for Jan 1 2018, used by the tests. |
 | `build_data.py` | Reads the `.h5` power data, writes `data/index.json` and `data/bands/<id>.json`. |
 | `build_settings.py` | Reads receiver settings (HDF5 attributes only), writes `data/settings.json`. |
 | `build_site.py` | Writes `index.html` and `band/<id>/index.html` from `templates/`. |
 | `spectrum.py` | Shared helpers: day keys, band masks, statistics, fixed-bin histograms. |
-| `ntia.py` | Radio-service colors of the NTIA U.S. Frequency Allocation Chart, and the mapping from each band's `services` to them. |
+| `ntia.py` | The one table of stripe colors, keyed by NTIA service name: official NTIA legend colors, the documented `ADJUSTED` colors, and the category marker colors. |
 | `test_*.py` | Tests (run with pytest). |
 
 `bands.json` and `reference_2018-01-01.json` are read from this folder by default. To use copies
@@ -47,7 +47,8 @@ export IIT_DATA_DIR="/path/to/2018 IITSO Wideband Data"
    - Each day is cached in `tools/cache/<date>.json`; re-running only processes missing days.
    - Files on the same date are pooled into one day; duplicate copies such as `name (1).h5` count once.
    - Files that cannot be opened are skipped and listed in `data/index.json` (`unreadable`).
-   - If `bands.json` changes, delete `tools/cache/` and run again.
+   - If band limits or sub-bands in `bands.json` change, delete `tools/cache/` and run again. If only
+     descriptions change (names, notes, allocations), `--assemble-only` is enough.
 
 2. **Receiver settings** (attributes and sweep times only, never the power data; takes seconds and
    does not touch the cache):
@@ -66,6 +67,9 @@ export IIT_DATA_DIR="/path/to/2018 IITSO Wideband Data"
    ```
 
    Edit `tools/templates/*.html` and `assets/*` for layout changes, then re-run this step.
+   Band stripes are drawn from each band's `allocations` in `bands.json` (primary services share the
+   segment equally, secondary services get a thin stripe below); the free-text `services` string is
+   not parsed. Federal, cellular and public-safety bands (`rules.category_markers`) get a marker strip.
    The notice bar and footer shared by every page are `templates/notice.html` and `templates/footer.html`.
 
 ## Tests

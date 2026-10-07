@@ -108,18 +108,62 @@ def test_every_page_has_notice_bar_and_footer():
             f"{path}: link to the removed About page"
 
 
-def test_colors_come_from_the_ntia_chart():
-    from ntia import NTIA_COLORS, services
-    html = page("index.html")
-    bands, _ = plan_limits()
+def plan_bands():
     with open(os.path.join(HERE, "bands.json")) as fh:
-        plan = {b["id"]: b for g in json.load(fh)["groups"] for b in g["bands"]}
-    for band_id, lo, hi in bands:
-        names = services(plan[band_id]["services"])
-        cells = "".join(f'<span style="background:{NTIA_COLORS[n]}"></span>' for n in names)
-        assert f'class="seg-stripes" title="{" + ".join(names)}">{cells}</span>' in html, band_id
-        assert f'class="svc-swatch" title="{" + ".join(names)}">{cells}</span>' in html, band_id
-        assert cells in page(f"band/{band_id}/index.html"), band_id
-    assert "cat-" not in html, "old category colors still on the overview"
-    for color in re.findall(r"background:(#[0-9a-f]{6})", html):
-        assert color in NTIA_COLORS.values(), f"{color} is not an NTIA chart color"
+        plan = json.load(fh)
+    return plan, [b for g in plan["groups"] for b in g["bands"]]
+
+
+def test_stripes_match_allocations_for_every_band():
+    from build_site import SECONDARY_SHARE
+    from ntia import MARKER_COLORS, MARKER_NAMES, SERVICE_COLORS
+    html = page("index.html")
+    plan, bands = plan_bands()
+    markers = plan["rules"]["category_markers"]
+    for b in bands:
+        seg = re.search(rf'<a class="band-seg[^"]*"[^>]*href="band/{re.escape(b["id"])}/".*?</a>', html).group(0)
+        got = re.findall(r'<span style="background:(#[0-9a-f]{6});flex-grow:([\d.]+)"></span>', seg)
+        primary = [a for a in b["allocations"] if a["status"] == "primary"]
+        secondary = [a for a in b["allocations"] if a["status"] == "secondary"]
+        rest = 100 * (1 - SECONDARY_SHARE * len(secondary))
+        want = [(SERVICE_COLORS[a["service"]], rest / len(primary)) for a in primary]
+        want += [(SERVICE_COLORS[a["service"]], 100 * SECONDARY_SHARE) for a in secondary]
+        assert [(c, round(float(g), 3)) for c, g in got] == [(c, round(g, 3)) for c, g in want], b["id"]
+        if b["category"] in markers:
+            assert "has-marker" in seg and f'class="seg-marker" style="background:{MARKER_COLORS[b["category"]]}"' in seg, b["id"]
+            item = re.search(rf'<a href="band/{re.escape(b["id"])}/" title=.*?</a>', html).group(0)
+            assert f'<span class="cat-tag">{MARKER_NAMES[b["category"]]}</span>' in item, b["id"]
+        else:
+            assert "seg-marker" not in seg and "has-marker" not in seg, b["id"]
+
+
+def test_legend_lists_exactly_the_services_in_use():
+    from build_site import LEGEND_NOTE
+    from ntia import MARKER_NAMES
+    html = page("index.html")
+    plan, bands = plan_bands()
+    used = sorted({a["service"] for b in bands for a in b["allocations"]})
+    services_block = html.split('<div class="legend-title">Allocated services</div>')[1].split("</div>")[0]
+    assert re.findall(r"</span></span>([^<]+)</span>", services_block) == used
+    markers_block = html.split('<div class="legend-title">Markers</div>')[1].split("</div>")[0]
+    assert re.findall(r'class="marker-swatch"[^>]*></span>([^<]+)</span>', markers_block) == [
+        MARKER_NAMES[c] for c in plan["rules"]["category_markers"]]
+    assert LEGEND_NOTE in html
+    assert "cat-" not in html.replace("cat-tag", "")
+
+
+def test_band_pages_write_services_from_allocations():
+    from build_site import allocation_notes, services_text
+    _, bands = plan_bands()
+    for b in bands:
+        html = page(f"band/{b['id']}/index.html")
+        assert f"Services: <strong>{escape_html(services_text(b))}</strong>" in html, b["id"]
+        for note in allocation_notes(b):
+            assert escape_html(note) in html, b["id"]
+    amateur = next(b for b in bands if b["id"] == "400-460--420-430")
+    assert services_text(amateur) == "RADIOLOCATION, Amateur (secondary)"
+
+
+def escape_html(text):
+    from html import escape
+    return escape(text)

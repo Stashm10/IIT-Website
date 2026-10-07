@@ -52,9 +52,19 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; display: 
 
 /* Radio-service colors from the NTIA U.S. Frequency Allocation Chart: one stripe per service */
 .svc-swatch { display: inline-flex; flex-direction: column; width: 0.85rem; height: 0.85rem; border: 1px solid rgba(0,0,0,.45); border-radius: 2px; overflow: hidden; vertical-align: -2px; margin-right: 0.35rem; flex-shrink: 0; }
-.svc-swatch span, .seg-stripes span { display: block; flex: 1; }
+.svc-swatch span, .seg-stripes span { display: block; flex: 1 1 0; }  /* flex-grow set per stripe */
 .seg-stripes { position: absolute; inset: 0; display: flex; flex-direction: column; }
 .seg-stripes span + span { border-top: 1px solid rgba(0,0,0,.25); }
+/* Category marker strip (federal / cellular / public safety): 6 px, under a 1 px white line */
+.band-seg.has-marker { padding-bottom: 7px; }
+.band-seg.has-marker .seg-stripes { bottom: 7px; }
+.seg-marker { position: absolute; left: 0; right: 0; bottom: 0; height: 7px; border-top: 1px solid #fff; }
+.marker-swatch { display: inline-block; width: 1.6rem; height: 6px; margin-right: 0.4rem; border-radius: 1px; }
+.cat-tag { display: inline-block; margin-left: 0.4rem; padding: 0 0.3rem; border: 1px solid #999; border-radius: 2px; font-size: 0.65rem; font-weight: 700; color: #444; line-height: 1.4; white-space: nowrap; vertical-align: 1px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.legend-block { margin-bottom: 0.7rem; }
+.legend-title { font-size: 0.72rem; font-weight: 700; color: #444; margin-bottom: 0.3rem; }
+.legend-note { font-size: 0.72rem; color: #666; line-height: 1.5; max-width: 900px; }
 .legend-item { display: inline-flex; align-items: center; }
 
 /* Overview: legend, coverage, group bars */

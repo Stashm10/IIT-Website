@@ -1,49 +1,75 @@
-"""Every service in bands.json must map to an NTIA allocation-chart color."""
+"""Service and marker colors: coverage, provenance and separation."""
+import itertools
 import json
 import os
 
-import pytest
-
-from ntia import NTIA_COLORS, services
+from build_site import stripe_layout
+from ntia import ADJUSTED, MARKER_COLORS, OFFICIAL, SERVICE_COLORS, oklab_distance
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(HERE, "bands.json")) as fh:
+    PLAN = json.load(fh)
+BANDS = [b for g in PLAN["groups"] for b in g["bands"]]
+USED = sorted({a["service"] for b in BANDS for a in b["allocations"]})
+# Fill of the NTIA chart's federal / shared / non-federal "activity code" boxes (read from the PDF).
+ACTIVITY_CODE = ["#ee334e", "#231f20", "#00b185"]
 
 
-def test_palette_has_all_30_ntia_services():
-    assert len(NTIA_COLORS) == 30
-    assert NTIA_COLORS["FIXED"] == "#df068c" and NTIA_COLORS["MOBILE"] == "#e9d3e7"
-    assert NTIA_COLORS["LAND MOBILE"] == "#00a2b3" and NTIA_COLORS["AMATEUR"] == "#009370"
-
-
-@pytest.mark.parametrize("text, expected", [
-    ("FIXED, MOBILE", ["FIXED", "MOBILE"]),
-    ("MOBILE except aeronautical mobile", ["MOBILE"]),
-    ("AERONAUTICAL MOBILE (R)", ["AERONAUTICAL MOBILE"]),
-    ("RADIOLOCATION, Amateur", ["RADIOLOCATION", "AMATEUR"]),
-    ("AMATEUR, AMATEUR-SATELLITE", ["AMATEUR", "AMATEUR SATELLITE"]),
-    ("MARITIME MOBILE, LAND MOBILE, MARITIME MOBILE (AIS)", ["MARITIME MOBILE", "LAND MOBILE"]),
-    ("FIXED, MOBILE, MOBILE-SATELLITE (Earth-to-space); RADIONAVIGATION-SATELLITE (149.9–150.05)",
-     ["FIXED", "MOBILE", "MOBILE SATELLITE", "RADIONAVIGATION SATELLITE"]),
-    ("METEOROLOGICAL AIDS (radiosonde); EARTH EXPLORATION-SATELLITE and METEOROLOGICAL-SATELLITE uplinks in 401–403",
-     ["METEOROLOGICAL", "EARTH EXPLORATION SATELLITE", "METEOROLOGICAL SATELLITE"]),
-    ("STANDARD FREQUENCY AND TIME SIGNAL-SATELLITE, METEOROLOGICAL AIDS",
-     ["STANDARD FREQUENCY AND TIME SIGNAL SATELLITE", "METEOROLOGICAL"]),
-    ("SPACE RESEARCH (space-to-Earth)", ["SPACE RESEARCH"]),
-])
-def test_services_are_parsed_to_ntia_names(text, expected):
-    assert services(text) == expected
-
-
-def test_unknown_service_is_an_error():
-    with pytest.raises(ValueError, match="no NTIA color"):
-        services("FIXED, TELEPATHY")
-
-
-def test_every_band_in_the_plan_has_ntia_colors():
-    with open(os.path.join(HERE, "bands.json")) as fh:
-        plan = json.load(fh)
-    for g in plan["groups"]:
+def touching_pairs():
+    """Service pairs whose stripes touch: stacked in one segment, or overlapping across neighbours."""
+    touch = set()
+    for g in PLAN["groups"]:
+        segs = []
         for b in g["bands"]:
-            names = services(b["services"])
-            assert names, b["id"]
-            assert all(n in NTIA_COLORS for n in names), b["id"]
+            y, spans = 0.0, []
+            for a, share in stripe_layout(b):
+                spans.append((a["service"], y, y + share))
+                y += share
+            segs.append(spans)
+        for spans in segs:
+            touch |= {tuple(sorted((a, b))) for (a, _, _), (b, _, _) in zip(spans, spans[1:]) if a != b}
+        for left, right in zip(segs, segs[1:]):
+            touch |= {tuple(sorted((a, b))) for a, a0, a1 in left for b, b0, b1 in right
+                      if a != b and min(a1, b1) - max(a0, b0) > 1e-9}
+    return touch
+
+
+def test_one_color_per_ntia_service():
+    assert set(SERVICE_COLORS) == set(PLAN["rules"]["ntia_services"])
+    assert set(OFFICIAL) == set(PLAN["rules"]["ntia_services"])
+
+
+def test_unadjusted_colors_are_official_and_adjustments_are_explained():
+    for name, color in SERVICE_COLORS.items():
+        if name in ADJUSTED:
+            assert color == ADJUSTED[name][0] and ADJUSTED[name][1], name
+        else:
+            assert color == OFFICIAL[name], name
+    assert {"FIXED", "MOBILE", "LAND MOBILE"}.isdisjoint(ADJUSTED)
+
+
+def test_every_used_service_pair_is_distinguishable():
+    touch = touching_pairs()
+    for a, b in itertools.combinations(USED, 2):
+        need = 15 if (a, b) in touch else 10
+        assert oklab_distance(SERVICE_COLORS[a], SERVICE_COLORS[b]) >= need, (a, b)
+    assert ("BROADCASTING", "LAND MOBILE") in touch
+
+
+def test_markers_differ_from_services_each_other_and_the_ntia_activity_code():
+    assert set(MARKER_COLORS) == set(PLAN["rules"]["category_markers"])
+    for cat, color in MARKER_COLORS.items():
+        for s in USED:
+            assert oklab_distance(color, SERVICE_COLORS[s]) >= 15, (cat, s)
+        for code in ACTIVITY_CODE:
+            assert oklab_distance(color, code) >= 15, (cat, code)
+    for a, b in itertools.combinations(MARKER_COLORS.values(), 2):
+        assert oklab_distance(a, b) >= 15
+
+
+def test_secondary_services_get_a_thin_stripe_below_the_primaries():
+    band = next(b for b in BANDS if b["id"] == "400-460--420-430")
+    layout = [(a["service"], a["status"], round(share, 3)) for a, share in stripe_layout(band)]
+    assert layout == [("RADIOLOCATION", "primary", 0.8), ("AMATEUR", "secondary", 0.2)]
+    for b in BANDS:
+        assert abs(sum(share for _, share in stripe_layout(b)) - 1) < 1e-9
