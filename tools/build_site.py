@@ -64,14 +64,6 @@ def coverage_html(dates):
     return "\n".join(out)
 
 
-def unreadable_html(index):
-    bad = index.get("unreadable", {})
-    if not bad:
-        return ""
-    files = ", ".join(f"{date} ({', '.join(names)})" for date, names in sorted(bad.items()))
-    return f" Source files skipped because they are damaged or incomplete: {escape(files)}."
-
-
 def group_html(group, bands):
     span = group["high_mhz"] - group["low_mhz"]
     segs, items, ticks = [], [], []
@@ -131,7 +123,7 @@ def main():
                      for c in index["categories"])
     with open(os.path.join(REPO, "index.html"), "w") as fh:
         fh.write(fill(template("index.html"), header=header, v=v, num_days=len(index["dates"]), coverage=coverage_html(index["dates"]),
-                      legend=legend, groups=groups_html, unreadable=unreadable_html(index)))
+                      legend=legend, groups=groups_html))
 
     # Pages are overwritten in place (deleting and recreating the folder makes synced
     # folders such as iCloud Desktop leave "name 2" copies); stale band pages are removed.
