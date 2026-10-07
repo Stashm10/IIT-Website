@@ -17,13 +17,17 @@
   <p>Loading a year of band data…</p>
 </div>
 {{header}}
+{{notice}}
 <div class="page-banner">
   <span class="iit-badge">IIT</span>
   <div class="header-text">
     <h1>{{name}} &mdash; {{range}} MHz</h1>
     <div class="subtitle">{{group_label}} &nbsp;·&nbsp; IIT Spectrum Observatory &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; 2018</div>
   </div>
-  <a class="back-btn" href="../../#{{group_id}}">← Back to Overview</a>
+  <div class="banner-links">
+    <a class="back-btn" href="../../#{{group_id}}">← Back to Overview</a>
+    <a class="back-btn" href="../../about/">About the data</a>
+  </div>
 </div>
 <main>
   <div>
@@ -34,6 +38,8 @@
     <span class="meta-chip">{{num_points}} frequency points</span>
     <span class="meta-chip" id="chip-days">…</span>
     {{note}}
+    <div id="settings-chips"></div>
+    <div class="settings-warning" id="settings-warning" role="note" hidden></div>
   </div>
 
   <div class="card picker">
@@ -81,6 +87,7 @@
     <p class="caption">All values in dBm. ≈ marks values read from a pooled histogram (accurate to the 0.5 dB bin width); single-day values are exact.</p>
   </div>
 </main>
+{{footer}}
 <script src="../../assets/header.js?v={{v}}"></script>
 <script src="../../assets/band.js?v={{v}}"></script>
 </body>

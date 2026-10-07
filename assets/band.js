@@ -57,7 +57,9 @@ function pooledStats(days) {
 
 // ---------- helpers ----------
 const pad = n => String(n).padStart(2, "0");
-const fmt = (x, d = 1) => (x == null || Number.isNaN(x) ? "–" : x.toFixed(d));
+// Numbers use the true minus sign (U+2212), like the chart axes.
+const minus = text => String(text).replace(/-/g, "\u2212");
+const fmt = (x, d = 1) => (x == null || Number.isNaN(x) ? "–" : minus(x.toFixed(d)));
 const daysInMonth = m => new Date(YEAR, m, 0).getDate();
 const monthOf = date => Number(date.slice(5, 7));
 function longDate(date) {
@@ -70,6 +72,68 @@ function el(tag, attrs = {}, text) {
   }
   if (text != null) e.textContent = text;
   return e;
+}
+
+// ---------- receiver settings (data/settings.json) ----------
+let SUB = null;  // this band's sub-band entry: {periods, changes, typical_sweep_interval_s, ...}
+const num = v => minus(String(v));
+const SETTING_INFO = {
+  rbw: ["resolution bandwidth", v => `${num(v / 1000)} kHz`],
+  vbw: ["video bandwidth", v => (typeof v === "number" ? `${num(v / 1000)} kHz` : String(v))],
+  atten: ["attenuation", v => `${num(v)} dB`],
+  ref_level: ["reference level", v => `${num(v)} dBm`],
+  start_freq: ["start frequency", v => `${num(v / 1e6)} MHz`],
+  stop_freq: ["stop frequency", v => `${num(v / 1e6)} MHz`],
+  num_points: ["number of frequency points", v => String(v)],
+  avg_len: ["averaging length", v => String(v)],
+};
+const fieldLabel = f => (SETTING_INFO[f] ? SETTING_INFO[f][0] : f);
+const showSetting = (f, v) => (v == null ? "none" : SETTING_INFO[f] ? SETTING_INFO[f][1](v) : String(v));
+const subbandKey = sb => `${sb.start_mhz}-${sb.stop_mhz}`;
+
+// Settings changes grouped by the date they took effect: [[date, [change, ...]], ...]
+function changesByDate() {
+  const out = new Map();
+  for (const c of SUB ? SUB.changes : []) {
+    if (!out.has(c.date)) out.set(c.date, []);
+    out.get(c.date).push(c);
+  }
+  return [...out.entries()];
+}
+const describeChanges = list => list.map(c => `${fieldLabel(c.field)}: ${showSetting(c.field, c.old)} → ${showSetting(c.field, c.new)}`).join("; ");
+
+function renderSettingsWarning() {
+  const box = document.getElementById("settings-warning");
+  const dates = changesByDate();
+  box.hidden = !dates.length;
+  if (!dates.length) return;
+  const parts = dates.map(([date, list]) => `${longDate(date)} (${describeChanges(list)})`);
+  const joined = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0];
+  box.textContent = `The receiver settings for this part of the spectrum changed on ${joined}. Differences between ` +
+    "periods before and after these dates may come from the receiver rather than from the spectrum.";
+}
+
+// Chips with the receiver settings of the selected period ("varies" if it spans a change).
+function renderSettingsChips(days) {
+  const box = document.getElementById("settings-chips");
+  box.replaceChildren();
+  if (!SUB) return;
+  const periods = SUB.periods.filter(p => days.some(d => d.date >= p.from && d.date <= p.to));
+  const one = get => { const vals = [...new Set(periods.map(get))]; return vals.length === 1 ? vals[0] : undefined; };
+  const chip = (label, value) => {
+    const c = el("span", { class: "meta-chip" }, `${label}: `);
+    c.append(el("strong", {}, value === undefined ? "varies" : value));
+    box.append(c);
+  };
+  const step = one(p => p.freq_step_khz);
+  chip("Frequency step", step === undefined ? undefined : `${num(step)} kHz`);
+  for (const f of ["rbw", "atten", "ref_level"]) {
+    const v = one(p => p.settings[f]);
+    const label = { rbw: "Resolution bandwidth", atten: "Attenuation", ref_level: "Reference level" }[f];
+    chip(label, v === undefined ? undefined : showSetting(f, v));
+  }
+  chip("Time between sweeps", `about ${(SUB.typical_sweep_interval_s / 60).toFixed(1)} min`);
+  if (SUB.periods.length === 1) box.append(el("span", { class: "meta-chip" }, "Receiver settings constant through 2018"));
 }
 
 // ---------- state ----------
@@ -170,15 +234,16 @@ function renderSummary(stats) {
   document.getElementById("selection-sub").textContent = sub;
 
   const approx = stats.exact ? "" : "≈";
+  const dec = stats.exact ? 2 : 1;  // "≈" values are good to the 0.5 dB bin width: one decimal
   const binNote = stats.exact ? null : "from the pooled histogram (±0.5 dB)";
   const items = [
     { label: "Readings", value: stats.readings.toLocaleString() },
     { label: "Min Power", value: fmt(stats.min), unit: "dBm" },
     { label: "Max Power", value: fmt(stats.max), unit: "dBm" },
-    { label: "Mean Power", value: fmt(stats.mean, 2), unit: "dBm" },
-    { label: "Median", value: approx + fmt(stats.median, 2), unit: "dBm", note: binNote },
-    { label: "10th percentile", value: approx + fmt(stats.p10, 2), unit: "dBm", note: binNote },
-    { label: "90th percentile", value: approx + fmt(stats.p90, 2), unit: "dBm", note: binNote },
+    { label: "Mean of dBm values", value: fmt(stats.mean, 2), unit: "dBm" },
+    { label: "Median", value: approx + fmt(stats.median, dec), unit: "dBm", note: binNote },
+    { label: "10th percentile", value: approx + fmt(stats.p10, dec), unit: "dBm", note: binNote },
+    { label: "90th percentile", value: approx + fmt(stats.p90, dec), unit: "dBm", note: binNote },
     { label: "Most common", value: fmt(stats.peak_bin_low), unit: "dBm",
       note: `fullest 0.5 dB bin (${fmt(stats.peak_bin_low)} to ${fmt(stats.peak_bin_low + BIN_W)})` },
   ];
@@ -267,6 +332,16 @@ function renderTrend() {
     traces.push({ x: [d.date], y: [d.median], type: "scatter", mode: "markers", showlegend: false, hoverinfo: "skip",
       marker: { size: 11, color: "rgba(0,0,0,0)", line: { color: "#1a1a1a", width: 2 } } });
   }
+  const changes = changesByDate();
+  if (changes.length) {
+    const lo = Math.min(...DATA.days.map(d => d.p10)), hi = Math.max(...DATA.days.map(d => d.p90));
+    const ys = Array.from({ length: 15 }, (_, i) => lo + ((hi - lo) * i) / 14);
+    changes.forEach(([date, list], i) => traces.push({
+      x: ys.map(() => date), y: ys, type: "scatter", mode: "lines", name: "Receiver setting change",
+      showlegend: i === 0, line: { color: "#444", width: 1.2, dash: "dash" },
+      hovertemplate: `Receiver settings changed on ${longDate(date)}<br>${describeChanges(list)}<extra></extra>`,
+    }));
+  }
   Plotly.react("trend", traces, {
     ...LAYOUT_BASE,
     margin: { t: 10, r: 20, b: 40, l: 65 },
@@ -277,15 +352,15 @@ function renderTrend() {
 }
 
 function statCells(s, approx) {
-  const a = approx ? "≈" : "";
-  return [fmt(s.min), fmt(s.mean, 2), a + fmt(s.median, 2), a + fmt(s.p10, 2), a + fmt(s.p90, 2), fmt(s.max), fmt(s.peak_bin_low)];
+  const a = approx ? "≈" : "", d = approx ? 1 : 2;  // "≈" values: one decimal
+  return [fmt(s.min), fmt(s.mean, 2), a + fmt(s.median, d), a + fmt(s.p10, d), a + fmt(s.p90, d), fmt(s.max), fmt(s.peak_bin_low)];
 }
 
 function renderTable() {
   const head = document.getElementById("table-head");
   const body = document.getElementById("table-body");
   const title = document.getElementById("table-title");
-  const cols = ["Min", "Mean", "Median", "p10", "p90", "Max", "Peak bin"];
+  const cols = ["Min", "Mean (of dBm)", "Median", "p10", "p90", "Max", "Peak bin"];
   body.replaceChildren();
 
   if (state.month === "all") {
@@ -332,8 +407,10 @@ function renderTable() {
 }
 
 function render() {
-  const stats = pooledStats(selectedDays());
+  const days = selectedDays();
+  const stats = pooledStats(days);
   renderPicker();
+  renderSettingsChips(days);
   renderSummary(stats);
   renderHistogram(stats);
   renderTrend();
@@ -344,15 +421,22 @@ async function boot() {
   const root = document.body.dataset.root;
   const id = document.body.dataset.bandId;
   try {
-    const res = await fetch(`${root}data/bands/${id}.json`);
+    const [res, settingsRes] = await Promise.all([
+      fetch(`${root}data/bands/${id}.json`),
+      fetch(`${root}data/settings.json`).catch(() => null),
+    ]);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     DATA = await res.json();
+    if (settingsRes && settingsRes.ok) {
+      SUB = (await settingsRes.json()).subbands[subbandKey(DATA.band.subband)] || null;
+    }
     BY_DATE = Object.fromEntries(DATA.days.map(d => [d.date, d]));
     YEAR_STATS = pooledStats(DATA.days);
     const nz = YEAR_STATS.hist.map((n, i) => (n ? i : -1)).filter(i => i >= 0);
     X_RANGE = [BIN_LOW + BIN_W * nz[0] - 1, BIN_LOW + BIN_W * (nz[nz.length - 1] + 1) + 1];
     document.getElementById("chip-days").textContent = `${DATA.days.length} observed days`;
     state = readHash();
+    renderSettingsWarning();
     render();
     document.getElementById("trend").on("plotly_click", ev => {
       const date = ev.points[0].x.slice(0, 10);

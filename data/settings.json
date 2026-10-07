@@ -1,0 +1,262 @@
+{
+ "description": "Receiver settings of every observed day, read from HDF5 attributes only (power data not read). A period is a run of consecutive observed dates with identical settings; a change is dated by the first day with the new value.",
+ "fields": [
+  "start_freq",
+  "stop_freq",
+  "num_points",
+  "rbw",
+  "vbw",
+  "atten",
+  "ref_level",
+  "avg_len",
+  "name"
+ ],
+ "files_read": 300,
+ "typical_sweep_interval_s": 704.6,
+ "subbands": {
+  "30-54": {
+   "index": 0,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 2.86,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 30000000.0,
+      "stop_freq": 54000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 0,
+      "ref_level": -60,
+      "avg_len": 1,
+      "name": "TV channels 2-3",
+      "index": 0
+     },
+     "freq_step_khz": 3.0
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "54-108": {
+   "index": 1,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 6.2,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 54000000.0,
+      "stop_freq": 108000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 30,
+      "ref_level": -45,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 1
+     },
+     "freq_step_khz": 6.75
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "108-174": {
+   "index": 2,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 7.62,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 108000000.0,
+      "stop_freq": 174000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 10,
+      "ref_level": -30,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 2
+     },
+     "freq_step_khz": 8.25
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "174-225": {
+   "index": 3,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 5.93,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 174000000.0,
+      "stop_freq": 225000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 10,
+      "ref_level": -30,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 3
+     },
+     "freq_step_khz": 6.375
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "225-406": {
+   "index": 4,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 20.87,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 225000000.0,
+      "stop_freq": 406000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 5,
+      "ref_level": -50,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 4
+     },
+     "freq_step_khz": 22.625
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "406-698": {
+   "index": 5,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 33.44,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 406000000.0,
+      "stop_freq": 698000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 25,
+      "ref_level": -40,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 5
+     },
+     "freq_step_khz": 36.5
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "698-760": {
+   "index": 6,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 7.22,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 698000000.0,
+      "stop_freq": 760000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 25,
+      "ref_level": -40,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 6
+     },
+     "freq_step_khz": 7.75
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "760-780": {
+   "index": 7,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 2.37,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 760000000.0,
+      "stop_freq": 780000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 0,
+      "ref_level": -40,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 7
+     },
+     "freq_step_khz": 2.5
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  },
+  "780-1000": {
+   "index": 8,
+   "typical_sweep_interval_s": 704.6,
+   "typical_sweep_time_s": 24.83,
+   "periods": [
+    {
+     "from": "2018-01-01",
+     "to": "2018-12-30",
+     "days": 299,
+     "settings": {
+      "start_freq": 780000000.0,
+      "stop_freq": 1000000000.0,
+      "num_points": 8001,
+      "rbw": 3000.0,
+      "vbw": false,
+      "atten": 30,
+      "ref_level": -45,
+      "avg_len": 1,
+      "name": "(none)",
+      "index": 8
+     },
+     "freq_step_khz": 27.5
+    }
+   ],
+   "changes": [],
+   "mixed_days": []
+  }
+ },
+ "varying_attributes": []
+}
