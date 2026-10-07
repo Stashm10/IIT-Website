@@ -42,7 +42,10 @@ def asset_version():
 
 
 def mhz(x):
-    return f"{x:g}"
+    """A frequency exactly as written in bands.json: no rounding, no trailing zeros (30.0 -> '30').
+    str() of a float is its shortest exact form, so 156.2475 stays 156.2475."""
+    text = str(x)
+    return text.rstrip("0").rstrip(".") if "." in text else text
 
 
 def band_range(b):
