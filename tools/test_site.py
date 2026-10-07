@@ -106,3 +106,20 @@ def test_every_page_has_notice_bar_and_footer():
         assert '<footer class="site-footer">' in html, path
         assert "About the data" not in html and 'href="about/"' not in html and "../../about/" not in html, \
             f"{path}: link to the removed About page"
+
+
+def test_colors_come_from_the_ntia_chart():
+    from ntia import NTIA_COLORS, services
+    html = page("index.html")
+    bands, _ = plan_limits()
+    with open(os.path.join(HERE, "bands.json")) as fh:
+        plan = {b["id"]: b for g in json.load(fh)["groups"] for b in g["bands"]}
+    for band_id, lo, hi in bands:
+        names = services(plan[band_id]["services"])
+        cells = "".join(f'<span style="background:{NTIA_COLORS[n]}"></span>' for n in names)
+        assert f'class="seg-stripes" title="{" + ".join(names)}">{cells}</span>' in html, band_id
+        assert f'class="svc-swatch" title="{" + ".join(names)}">{cells}</span>' in html, band_id
+        assert cells in page(f"band/{band_id}/index.html"), band_id
+    assert "cat-" not in html, "old category colors still on the overview"
+    for color in re.findall(r"background:(#[0-9a-f]{6})", html):
+        assert color in NTIA_COLORS.values(), f"{color} is not an NTIA chart color"

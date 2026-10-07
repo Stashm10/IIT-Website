@@ -13,6 +13,7 @@ The site is plain static HTML (GitHub Pages). Everything under `data/`, `band/` 
 | `build_settings.py` | Reads receiver settings (HDF5 attributes only), writes `data/settings.json`. |
 | `build_site.py` | Writes `index.html` and `band/<id>/index.html` from `templates/`. |
 | `spectrum.py` | Shared helpers: day keys, band masks, statistics, fixed-bin histograms. |
+| `ntia.py` | Radio-service colors of the NTIA U.S. Frequency Allocation Chart, and the mapping from each band's `services` to them. |
 | `test_*.py` | Tests (run with pytest). |
 
 `bands.json` and `reference_2018-01-01.json` are read from this folder by default. To use copies

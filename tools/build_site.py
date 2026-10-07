@@ -10,6 +10,8 @@ import os
 import shutil
 from html import escape
 
+from ntia import NTIA_COLORS, services
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 TEMPLATES = os.path.join(HERE, "templates")
@@ -68,6 +70,21 @@ def coverage_html(dates):
     return "\n".join(out)
 
 
+def stripes(band, cls):
+    """One colored stripe per NTIA service of the band, top to bottom (as on the NTIA chart)."""
+    names = services(band["services"])
+    cells = "".join(f'<span style="background:{NTIA_COLORS[n]}"></span>' for n in names)
+    return f'<span class="{cls}" title="{escape(" + ".join(names))}">{cells}</span>'
+
+
+def legend_html(bands):
+    """NTIA legend entries for the services that appear on the site, in the chart's (alphabetical) order."""
+    used = {n for b in bands for n in services(b["services"])}
+    return "".join(f'<span class="legend-item"><span class="svc-swatch">'
+                   f'<span style="background:{color}"></span></span>{escape(name)}</span>'
+                   for name, color in NTIA_COLORS.items() if name in used)
+
+
 def group_html(group, bands):
     span = group["high_mhz"] - group["low_mhz"]
     segs, items, ticks = [], [], []
@@ -75,10 +92,10 @@ def group_html(group, bands):
     for b in bands:
         share = (b["high_mhz"] - b["low_mhz"]) / span
         title = escape(f"{b['name']} — {band_range(b)} MHz")
-        segs.append(f'<a class="band-seg cat-{b["category"]}" style="flex-grow:{share:.4f}" '
-                    f'href="band/{b["id"]}/" title="{title}" aria-label="{title}">'
+        segs.append(f'<a class="band-seg" style="flex-grow:{share:.4f}" '
+                    f'href="band/{b["id"]}/" title="{title}" aria-label="{title}">{stripes(b, "seg-stripes")}'
                     f'<span class="seg-label" aria-hidden="true">{escape(band_range(b))}</span></a>')
-        items.append(f'<a href="band/{b["id"]}/" class="cat-{b["category"]}"><span class="cat-dot"></span>'
+        items.append(f'<a href="band/{b["id"]}/">{stripes(b, "svc-swatch")}'
                      f'<span class="bl-name">{escape(b["name"])}</span>'
                      f'<span class="bl-range">{band_range(b)} MHz</span></a>')
     # Tick labels at band edges, skipping ones that would collide.
@@ -109,7 +126,7 @@ def band_page(band, group, v):
         template("band.html"),
         **chrome(), v=v, id=band["id"], name=escape(band["name"]), range=band_range(band),
         group_id=group["id"], group_label=escape(f"Group {group['label']}"),
-        category=CATEGORY_NAMES[band["category"]], cat_class=f"cat-{band['category']}",
+        category=CATEGORY_NAMES[band["category"]], swatch=stripes(band, "svc-swatch"),
         services=escape(band["services"]), subband=f"{mhz(sub['start_mhz'])}–{mhz(sub['stop_mhz'])}",
         num_points=band.get("num_points", "–"), note=note,
     )
@@ -128,8 +145,7 @@ def main():
         band["num_points"] = days[0]["num_points"] if days else "–"
 
     groups_html = "\n".join(group_html(g, [bands[i] for i in g["band_ids"]]) for g in index["groups"])
-    legend = "".join(f'<span class="cat-{c}"><span class="cat-dot"></span>{CATEGORY_NAMES[c]}</span>'
-                     for c in index["categories"])
+    legend = legend_html(bands.values())
     with open(os.path.join(REPO, "index.html"), "w") as fh:
         fh.write(fill(template("index.html"), **chrome(), v=v, num_days=len(index["dates"]), coverage=coverage_html(index["dates"]),
                       legend=legend, groups=groups_html))
