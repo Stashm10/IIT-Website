@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IIT Spectrum Observatory — 2018 Band Histograms</title>
+  <link rel="stylesheet" href="assets/header.css?v={{v}}" />
+  <link rel="stylesheet" href="assets/site.css?v={{v}}" />
+</head>
+<body>
+{{header}}
+<div class="page-banner">
+  <span class="iit-badge">IIT</span>
+  <div class="header-text">
+    <h1>Spectrum Observatory — 44–900 MHz</h1>
+    <div class="subtitle">Illinois Institute of Technology &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; {{num_days}} observed days in 2018</div>
+  </div>
+</div>
+<main>
+  <p class="intro">
+    Real radio frequency spectrum measurements collected by the IIT Spectrum Observatory,
+    located on the rooftop of IIT Tower at 10 W. 35th Street, Chicago. The spectrum is split into
+    the analysis groups used in Wei &amp; Hood (IEEE RTC 2026). Click any band to see its power
+    distribution for every observed day of 2018, pooled by month or for the whole year.
+  </p>
+  <p class="draft-note"><strong>Draft band plan.</strong> {{status}}</p>
+
+  <div class="card">
+    <div class="section-title">Days with data — 2018</div>
+    <div class="coverage">{{coverage}}</div>
+    <p class="caption">Each square is one day; red days have a usable measurement file ({{num_days}} of 365).{{unreadable}}</p>
+  </div>
+
+  <div>
+    <div class="section-title">Service categories</div>
+    <div class="legend">{{legend}}</div>
+  </div>
+
+{{groups}}
+</main>
+<script src="assets/header.js?v={{v}}"></script>
+</body>
+</html>

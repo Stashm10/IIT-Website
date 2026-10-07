@@ -1,0 +1,158 @@
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #fff;
+      color: #1a1a1a;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+    }
+
+    .site-header{
+      --red: #cc0000;
+      --red-dark: #a30000;
+      --hdr-ink: #222;
+      --hdr-bg: #f4f4f4;
+      --h-top: 40px;
+      --h-logo: 96px;
+      --h-nav: 52px;
+
+      position: sticky;
+      top: 0;
+      z-index: 150;
+      background:#fff;
+      font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+      color: var(--hdr-ink);
+      transition: box-shadow .25s ease;
+    }
+    .site-header.is-scrolled{
+      box-shadow: 0 2px 10px rgba(0,0,0,.15);
+    }
+
+    .site-header .utility-bar{
+      background: var(--hdr-bg);
+      border-bottom: 1px solid #e0e0e0;
+      height: var(--h-top);
+      overflow: hidden;
+      transition: height .25s ease, opacity .2s ease;
+    }
+    .site-header .utility-bar ul{
+      list-style:none; display:flex; gap:20px; height:100%; align-items:center;
+      justify-content:flex-end; padding:0 24px;
+    }
+    .site-header .utility-bar a{
+      color:#444; text-decoration:none; font-size:.78rem; letter-spacing:.02em;
+    }
+    .site-header .utility-bar a:hover{ color: var(--red); text-decoration:underline; }
+    .site-header.is-scrolled .utility-bar{ height:0; opacity:0; border-bottom:none; }
+
+    .site-header .logo-row{
+      height: var(--h-logo);
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 24px;
+      transition: height .25s ease;
+    }
+    .site-header.is-scrolled .logo-row{ height:64px; }
+
+    .site-header .logo{
+      display:block; height:48px; transition: height .25s ease;
+    }
+    .site-header .logo svg{ height:100%; width:auto; display:block; }
+    .site-header.is-scrolled .logo{ height:32px; }
+
+    .site-header .logo--red{ display:block; }
+    .site-header .logo--black{ display:none; }
+    .site-header.is-scrolled .logo--red{ display:none; }
+    .site-header.is-scrolled .logo--black{ display:block; }
+
+    .site-header .site-search__toggle{
+      margin-left:auto; background:none; border:none; color:#fff;
+      cursor:pointer; padding:6px; display:flex; align-items:center;
+    }
+    .site-header .search-icon{ width:18px; height:18px; fill:#fff; }
+    .site-header .search-panel{
+      position:absolute; top:100%; right:24px; background:#fff;
+      box-shadow:0 8px 20px rgba(0,0,0,.18); padding:16px; z-index:60;
+      display:flex; gap:8px;
+    }
+    .site-header .search-panel input{
+      border:1px solid #ccc; padding:8px 10px; font-size:.9rem; min-width:220px;
+    }
+    .site-header .search-panel button{
+      background: var(--red); color:#fff; border:none; padding:8px 14px;
+      cursor:pointer; font-size:.85rem; font-weight:600;
+    }
+
+    .site-header .scrolled-actions{ display:none; align-items:center; gap:10px; }
+    .site-header.is-scrolled .scrolled-actions{ display:flex; }
+
+    .site-header .btn-cta{
+      background: var(--red); color:#fff; border:none;
+      padding:10px 16px; font-size:.85rem; font-weight:600;
+      text-decoration:none; cursor:pointer; border-radius:2px;
+    }
+    .site-header .btn-cta:hover{ background: var(--red-dark); }
+
+    .site-header .hamburger{
+      background:none; border:none; cursor:pointer;
+      width:32px; height:24px; position:relative;
+    }
+    .site-header .hamburger span,
+    .site-header .hamburger span::before,
+    .site-header .hamburger span::after{
+      content:""; position:absolute; left:0; width:100%; height:3px;
+      background:#222; transition:.2s;
+    }
+    .site-header .hamburger span{ top:50%; transform:translateY(-50%); }
+    .site-header .hamburger span::before{ top:-9px; }
+    .site-header .hamburger span::after{ top:9px; }
+
+    .site-header .main-nav{
+      background: var(--red);
+      height: var(--h-nav);
+      overflow:hidden;
+      transition: height .25s ease, opacity .2s ease;
+    }
+    .site-header.is-scrolled .main-nav{ height:0; opacity:0; }
+    .site-header .main-nav ul{
+      list-style:none; display:flex; gap:4px; height:100%; align-items:center;
+      padding:0 24px;
+    }
+    .site-header .main-nav li{ position:relative; height:100%; display:flex; align-items:center; }
+
+    .site-header .nav-link, .site-header .nav-trigger{
+      background:none; border:none; color:#fff; font-size:.95rem;
+      font-weight:600; padding:10px 14px; cursor:pointer;
+      text-decoration:none; display:flex; align-items:center; gap:6px;
+      height:100%; font-family: inherit;
+    }
+    .site-header .nav-trigger::after{ content:"▾"; font-size:.7em; }
+    .site-header .nav-link:hover, .site-header .nav-trigger:hover{ background: rgba(255,255,255,.15); }
+
+    .site-header .sr-only, .site-header .show-for-sr{
+      position:absolute; width:1px; height:1px; overflow:hidden;
+      clip:rect(0,0,0,0); white-space:nowrap;
+    }
+
+    .site-header .dropdown-panel{
+      position:absolute; top:100%; left:0; background:#fff;
+      color:#222; min-width:220px; box-shadow:0 8px 20px rgba(0,0,0,.18);
+      padding:12px 0; display:none; z-index:50;
+    }
+    .site-header .dropdown-panel.open{ display:block; }
+    .site-header .dropdown-panel a{
+      display:block; padding:8px 18px; color:#222; text-decoration:none; font-size:.9rem;
+    }
+    .site-header .dropdown-panel a:hover{ background: var(--hdr-bg); color: var(--red); }
+
+    .site-header .mobile-menu{
+      display:none; position:absolute; top:100%; right:0; background:#fff;
+      box-shadow:0 8px 20px rgba(0,0,0,.18); width:260px; padding:10px 0;
+    }
+    .site-header .mobile-menu.open{ display:block; }
+    .site-header .mobile-menu a{ display:block; padding:10px 18px; color:#222; text-decoration:none; font-size:.92rem; }
+    .site-header .mobile-menu a:hover{ background:var(--hdr-bg); color:var(--red); }
+
+    @media (prefers-reduced-motion: reduce){
+      .site-header, .site-header .utility-bar, .site-header .logo-row,
+      .site-header .logo, .site-header .main-nav{ transition:none !important; }
+    }

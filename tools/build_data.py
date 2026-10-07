@@ -136,6 +136,10 @@ def assemble():
         "bands": {b["id"]: b for b in bands},
         "dates": [d["date"] for d in days],
         "sweeps": {d["date"]: d["sweeps"] for d in days},
+        # Days whose files exist but could not be read (e.g. corrupt HDF5 header).
+        "unreadable": {date: [os.path.basename(p) for p in paths]
+                       for date, paths in files_by_day().items()
+                       if date not in {d["date"] for d in days}},
     }
     with open(os.path.join(OUT_DIR, "index.json"), "w") as fh:
         json.dump(index, fh, separators=(",", ":"))

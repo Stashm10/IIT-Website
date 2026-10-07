@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{name}} ({{range}} MHz) — IIT Spectrum Observatory</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <link rel="stylesheet" href="../../assets/header.css?v={{v}}" />
+  <link rel="stylesheet" href="../../assets/site.css?v={{v}}" />
+</head>
+<body data-root="../../" data-band-id="{{id}}">
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Loading a year of band data…</p>
+</div>
+{{header}}
+<div class="page-banner">
+  <span class="iit-badge">IIT</span>
+  <div class="header-text">
+    <h1>{{name}} &mdash; {{range}} MHz</h1>
+    <div class="subtitle">{{group_label}} &nbsp;·&nbsp; IIT Spectrum Observatory &nbsp;·&nbsp; Chicago, IL &nbsp;·&nbsp; 2018</div>
+  </div>
+  <a class="back-btn" href="../../#{{group_id}}">← Back to Overview</a>
+</div>
+<main>
+  <div>
+    <span class="meta-chip {{cat_class}}"><span class="cat-dot"></span><strong>{{category}}</strong></span>
+    <span class="meta-chip">Services: <strong>{{services}}</strong></span>
+    <span class="meta-chip">Range: <strong>{{range}} MHz</strong></span>
+    <span class="meta-chip">Receiver sub-band: <strong>{{subband}} MHz</strong></span>
+    <span class="meta-chip">{{num_points}} frequency points</span>
+    <span class="meta-chip" id="chip-days">…</span>
+    {{note}}
+  </div>
+
+  <div class="card picker">
+    <div class="pick-label">Month</div>
+    <div class="month-tabs" id="month-tabs"></div>
+    <div id="day-row" hidden>
+      <div class="pick-label" style="margin:0.4rem 0">Day</div>
+      <div class="day-buttons" id="day-buttons"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Power distribution</div>
+    <div class="selection-title" id="selection-title"></div>
+    <p class="caption" id="selection-sub" style="margin-top:0.2rem"></p>
+    <div id="histogram"></div>
+    <p class="caption">
+      Share of all power readings in {{range}} MHz (every frequency point × every sweep) falling in each
+      0.5 dB bin. A month or the whole year is the exact sum of its daily histograms; the grey line shows
+      the whole year for comparison.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Summary statistics</div>
+    <div class="stats-grid" id="stats-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Daily median through the year</div>
+    <div id="trend"></div>
+    <p class="caption">Each point is one day's median power; the shaded band spans the 10th–90th percentile. Click a point to open that day.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-title" id="table-title"></div>
+    <div class="table-wrap">
+      <table class="daily">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <p class="caption">All values in dBm. ≈ marks values read from a pooled histogram (accurate to the 0.5 dB bin width); single-day values are exact.</p>
+  </div>
+</main>
+<script src="../../assets/header.js?v={{v}}"></script>
+<script src="../../assets/band.js?v={{v}}"></script>
+</body>
+</html>
