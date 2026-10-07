@@ -74,39 +74,58 @@ function el(tag, attrs = {}, text) {
 
 // ---------- state ----------
 let DATA, BY_DATE, YEAR_STATS, X_RANGE;
-let state = { month: "all", day: null };   // month: "all" | 1..12, day: "YYYY-MM-DD" | null
+// month: "all" | 1..12, quarter: null | 1..4 (only with month "all"), day: "YYYY-MM-DD" | null
+let state = { month: "all", quarter: null, day: null };
+
+const quarterMonths = q => [3 * q - 2, 3 * q - 1, 3 * q];
+const daysInQuarter = q => quarterMonths(q).reduce((a, m) => a + daysInMonth(m), 0);
+const quarterName = q => `Q${q} ${YEAR} (${MONTHS[3 * q - 3].slice(0, 3)}–${MONTHS[3 * q - 1].slice(0, 3)})`;
+const isYearView = () => state.month === "all" && !state.quarter && !state.day;
+const daysInMonths = months => DATA.days.filter(d => months.includes(monthOf(d.date)));
 
 function readHash() {
   const h = location.hash.slice(1);
   let m;
-  if ((m = h.match(/^(\d{4})-(\d{2})-(\d{2})$/)) && BY_DATE[h]) return { month: Number(m[2]), day: h };
-  if ((m = h.match(/^(\d{4})-(\d{2})$/)) && Number(m[2]) >= 1 && Number(m[2]) <= 12) return { month: Number(m[2]), day: null };
-  return { month: "all", day: null };
+  if ((m = h.match(/^(\d{4})-(\d{2})-(\d{2})$/)) && BY_DATE[h]) return { month: Number(m[2]), quarter: null, day: h };
+  if ((m = h.match(/^(\d{4})-(\d{2})$/)) && Number(m[2]) >= 1 && Number(m[2]) <= 12) return { month: Number(m[2]), quarter: null, day: null };
+  if ((m = h.match(/^(\d{4})-Q([1-4])$/i))) return { month: "all", quarter: Number(m[2]), day: null };
+  return { month: "all", quarter: null, day: null };
 }
 function select(next) {
-  state = next;
-  const hash = state.day || (state.month === "all" ? "" : `${YEAR}-${pad(state.month)}`);
+  state = { month: "all", quarter: null, day: null, ...next };
+  const hash = state.day
+    || (state.quarter ? `${YEAR}-Q${state.quarter}` : state.month === "all" ? "" : `${YEAR}-${pad(state.month)}`);
   history.replaceState(null, "", hash ? `#${hash}` : location.pathname);
   render();
 }
 function selectedDays() {
   if (state.day) return [BY_DATE[state.day]];
+  if (state.quarter) return daysInMonths(quarterMonths(state.quarter));
   if (state.month === "all") return DATA.days;
-  return DATA.days.filter(d => monthOf(d.date) === state.month);
+  return daysInMonths([state.month]);
 }
 
 // ---------- rendering ----------
 function renderPicker() {
+  const periods = document.getElementById("period-tabs");
+  periods.replaceChildren(el("button", { class: "pick-btn", type: "button", "aria-pressed": String(isYearView()),
+    onclick: () => select({}) }, `All ${YEAR}`));
+  for (let q = 1; q <= 4; q++) {
+    const n = daysInMonths(quarterMonths(q)).length;
+    const b = el("button", { class: "pick-btn", type: "button", "aria-pressed": String(state.quarter === q),
+      title: `${quarterName(q)}: ${n} of ${daysInQuarter(q)} days observed`,
+      onclick: () => select({ quarter: q }) }, `Q${q}`);
+    if (!n) b.disabled = true;
+    periods.append(b);
+  }
+
   const tabs = document.getElementById("month-tabs");
   tabs.replaceChildren();
-  const allBtn = el("button", { class: "pick-btn", type: "button", "aria-pressed": String(state.month === "all"),
-    onclick: () => select({ month: "all", day: null }) }, `All ${YEAR}`);
-  tabs.append(allBtn);
   MONTHS.forEach((name, i) => {
     const m = i + 1;
-    const n = DATA.days.filter(d => monthOf(d.date) === m).length;
+    const n = daysInMonths([m]).length;
     const b = el("button", { class: "pick-btn", type: "button", "aria-pressed": String(state.month === m),
-      title: `${n} of ${daysInMonth(m)} days observed`, onclick: () => select({ month: m, day: null }) }, name.slice(0, 3));
+      title: `${n} of ${daysInMonth(m)} days observed`, onclick: () => select({ month: m }) }, name.slice(0, 3));
     if (!n) b.disabled = true;
     tabs.append(b);
   });
@@ -117,7 +136,7 @@ function renderPicker() {
   row.hidden = state.month === "all";
   if (state.month === "all") return;
   btns.append(el("button", { class: "pick-btn", type: "button", "aria-pressed": String(!state.day),
-    onclick: () => select({ month: state.month, day: null }) }, "Whole month"));
+    onclick: () => select({ month: state.month }) }, "Whole month"));
   for (let d = 1; d <= daysInMonth(state.month); d++) {
     const date = `${YEAR}-${pad(state.month)}-${pad(d)}`;
     const b = el("button", { class: "pick-btn", type: "button", "aria-pressed": String(state.day === date),
@@ -128,8 +147,9 @@ function renderPicker() {
   }
 }
 
-function selectionLabel(stats) {
+function selectionLabel() {
   if (state.day) return longDate(state.day);
+  if (state.quarter) return quarterName(state.quarter);
   if (state.month === "all") return `All of ${YEAR}`;
   return `${MONTHS[state.month - 1]} ${YEAR}`;
 }
@@ -139,12 +159,14 @@ function renderSummary(stats) {
   if (state.day) {
     const d = BY_DATE[state.day];
     sub = `${d.sweeps} sweeps · source file${d.files.length > 1 ? "s" : ""}: ${d.files.join(", ")}`;
+  } else if (state.quarter) {
+    sub = `${stats.days} of ${daysInQuarter(state.quarter)} days observed · ${stats.sweeps.toLocaleString()} sweeps pooled`;
   } else if (state.month === "all") {
     sub = `${stats.days} observed days · ${stats.sweeps.toLocaleString()} sweeps pooled`;
   } else {
     sub = `${stats.days} of ${daysInMonth(state.month)} days observed · ${stats.sweeps.toLocaleString()} sweeps pooled`;
   }
-  document.getElementById("selection-title").textContent = selectionLabel(stats);
+  document.getElementById("selection-title").textContent = selectionLabel();
   document.getElementById("selection-sub").textContent = sub;
 
   const approx = stats.exact ? "" : "≈";
@@ -172,11 +194,11 @@ function renderHistogram(stats) {
   const x = stats.hist.map((_, i) => BIN_LOW + BIN_W * (i + 0.5));
   const pct = h => { const t = h.reduce((a, b) => a + b, 0); return h.map(n => (100 * n) / t); };
   const traces = [{
-    x, y: pct(stats.hist), type: "bar", name: selectionLabel(stats),
+    x, y: pct(stats.hist), type: "bar", name: selectionLabel(),
     marker: { color: "#CC0000" },
     hovertemplate: "%{x:.2f} dBm — %{y:.2f}% of readings<extra></extra>",
   }];
-  if (state.month !== "all" || state.day) {
+  if (!isYearView()) {
     traces.push({
       x, y: pct(YEAR_STATS.hist), type: "scatter", mode: "lines", name: `All of ${YEAR}`,
       line: { color: "#555", width: 1.5, shape: "hvh" },
@@ -222,12 +244,14 @@ function percentileBand(lo, hi) {
 }
 
 function renderTrend() {
+  // Shade the selected month or quarter.
   const shapes = [];
-  if (state.month !== "all") {
-    const m = state.month;
+  const span = state.quarter ? quarterMonths(state.quarter) : state.month === "all" ? null : [state.month];
+  if (span) {
+    const first = span[0], last = span[span.length - 1];
     shapes.push({ type: "rect", xref: "x", yref: "paper", y0: 0, y1: 1, line: { width: 0 },
       fillcolor: "rgba(204,0,0,0.07)",
-      x0: `${YEAR}-${pad(m)}-01`, x1: m === 12 ? `${YEAR + 1}-01-01` : `${YEAR}-${pad(m + 1)}-01` });
+      x0: `${YEAR}-${pad(first)}-01`, x1: last === 12 ? `${YEAR + 1}-01-01` : `${YEAR}-${pad(last + 1)}-01` });
   }
   const p10 = yearSeries("p10"), p90 = yearSeries("p90"), med = yearSeries("median");
   const traces = [
@@ -265,19 +289,22 @@ function renderTable() {
   body.replaceChildren();
 
   if (state.month === "all") {
-    title.textContent = `Monthly statistics — ${YEAR} (click a month)`;
+    // Whole year or a quarter: one row per month.
+    const months = state.quarter ? quarterMonths(state.quarter) : MONTHS.map((_, i) => i + 1);
+    const period = state.quarter ? quarterName(state.quarter) : String(YEAR);
+    title.textContent = `Monthly statistics — ${period} (click a month)`;
     head.innerHTML = `<tr><th>Month</th><th>Days</th><th>Sweeps</th>${cols.map(c => `<th>${c}</th>`).join("")}</tr>`;
-    MONTHS.forEach((name, i) => {
-      const days = DATA.days.filter(d => monthOf(d.date) === i + 1);
+    months.forEach(m => {
+      const days = daysInMonths([m]);
       const tr = el("tr");
-      tr.append(el("td", {}, name));
+      tr.append(el("td", {}, MONTHS[m - 1]));
       if (!days.length) {
         tr.className = "missing";
         tr.append(el("td", {}, "0"), el("td", { colspan: cols.length + 1 }, "no data"));
       } else {
         const s = pooledStats(days);
-        tr.onclick = () => select({ month: i + 1, day: null });
-        [`${days.length}/${daysInMonth(i + 1)}`, s.sweeps.toLocaleString(), ...statCells(s, true)]
+        tr.onclick = () => select({ month: m });
+        [`${days.length}/${daysInMonth(m)}`, s.sweeps.toLocaleString(), ...statCells(s, true)]
           .forEach(v => tr.append(el("td", {}, v)));
       }
       body.append(tr);
